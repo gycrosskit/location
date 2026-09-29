@@ -1,0 +1,13 @@
+{
+  "name": "@gycrosskit/location-native",
+  "version": "0.1.0",
+  "description": "三端组件的 HarmonyOS 单次定位实现",
+  "main": "Index.ets",
+  "author": {
+    "name": "gycrosskit",
+    "url": "https://github.com/gycrosskit"
+  },
+  "repository": "https://github.com/gycrosskit/location",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}

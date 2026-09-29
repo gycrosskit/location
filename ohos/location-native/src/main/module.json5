@@ -1,0 +1,7 @@
+{
+  "module": {
+    "name": "LocationNative",
+    "type": "har",
+    "deviceTypes": ["default", "tablet"]
+  }
+}

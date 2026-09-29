@@ -43,6 +43,10 @@ when (result) {
 
 ## HarmonyOS 接入
 
+```sh
+ohpm install @gycrosskit/location-native@0.1.0
+```
+
 目标包 `@gycrosskit/location-native:0.1.0`；以 ohpm 查询与安装成功为上架依据。HAR 发布状态见 Release。开发阶段也可安装 `ohos/location-native/build/default/outputs/default/LocationNative.har`。
 
 ```typescript

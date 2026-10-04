@@ -2,7 +2,9 @@
 
 前台单次定位，提供权限/服务状态、取消、超时、缓存时效和精度过滤。保留系统原始坐标；权限申请、地址查询、坐标转换和业务精度要求由宿主负责。
 
-本轮 Maven/HAR 候选为 0.1.1，安装示例使用候选精确版本；当前待发布与远程验收，稳定 Registry `latest` 为 0.1.0。候选计划以 prerelease/OHPM `next` 提交，不覆盖稳定基线。
+本轮 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；安装示例使用候选精确版本，设备定位尚未验收。
+
+OHPM `next` 提交已接受，仍在审核；精确版本查询及独立 Registry 安装返回 NOTFOUND。稳定 Registry `latest` 仍为 0.1.0，Release HAR 可下载不代表 Registry 可安装。
 
 ## 平台与要求
 
@@ -86,10 +88,10 @@ HarmonyOS 页面销毁时调用请求 `cancel()`；每个 client 仅内存缓存
 
 Apache-2.0，见 [LICENSE](LICENSE)。
 
-## 0.1.1 候选：Kuikly 单次定位（待发布）
+## 0.1.1 候选：Kuikly 单次定位
 
 新增 `location-kuikly` 与原生 `GycLocationModule`，每个Page各注册一个对应Module。
-候选发布后 Maven 显式选择 `location-core:0.1.1`，OHOS 额外依赖 `location-kuikly:0.1.1`，原生 HAR 为 `@gycrosskit/location-native@0.1.1`；本地归档不代表这些远程坐标已可安装。计划使用 prerelease 与 OHPM `next`，保持稳定 `latest`。
+Maven 显式选择 `location-core:0.1.1`，OHOS 额外依赖 `location-kuikly:0.1.1`，原生 HAR 为 `@gycrosskit/location-native@0.1.1`。Maven 已完成远程文件校验，OHPM 可安装性按上方独立状态记录。
 
 ```kotlin
 val location = io.github.gycrosskit.location.kuikly.LocationModule(bridgeTimeoutMillis = 12_000)

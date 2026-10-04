@@ -26,4 +26,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "location"
-include(":location-core")
+include(":location-core", ":location-kuikly")

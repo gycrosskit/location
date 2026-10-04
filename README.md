@@ -2,6 +2,8 @@
 
 前台单次定位，提供权限/服务状态、取消、超时、缓存时效和精度过滤。保留系统原始坐标；权限申请、地址查询、坐标转换和业务精度要求由宿主负责。
 
+本轮 Maven/HAR 候选为 0.1.1，安装示例使用候选精确版本；当前待发布与远程验收，稳定 Registry `latest` 为 0.1.0。候选计划以 prerelease/OHPM `next` 提交，不覆盖稳定基线。
+
 ## 平台与要求
 
 | 平台 | 接入方式 | 系统要求 |
@@ -10,7 +12,7 @@
 | iOS | KMP `location-core`，`CoreLocation` | iOS 14+（使用实例 `authorizationStatus` API） |
 | HarmonyOS | 原生 `location-native` HAR，`geoLocationManager` | 当前 HAR 的 target/compatible SDK 均为 API 22 |
 
-KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。本版本无 Swift Package、Kuikly Module 或 KMP `ohosArm64` 桥；JVM 变体只含公共 API/数据与测试逻辑，无 JVM 定位实现。
+KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。稳定 0.1.0 无 Kuikly/OHOS KMP 桥；0.1.1 候选新增 `location-kuikly` 与 core 的 `ohosArm64` 变体。不提供 Swift Package；JVM 变体只含公共 API/数据与测试逻辑，无 JVM 定位实现。
 
 ## 安装
 
@@ -28,14 +30,17 @@ dependencyResolutionManagement {
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.gycrosskit.location:location-core:0.1.0")
+    implementation("com.github.gycrosskit.location:location-core:0.1.1")
+}
+ohosArm64Main.dependencies {
+    implementation("com.github.gycrosskit.location:location-kuikly:0.1.1")
 }
 ```
 
-HarmonyOS 原生包独立安装：
+HarmonyOS 原生包独立安装，候选正式可查询后执行；发布接受与 Registry 可安装分别核验：
 
 ```sh
-ohpm install @gycrosskit/location-native@0.1.0
+ohpm install @gycrosskit/location-native@0.1.1
 ```
 
 ## 最小使用
@@ -80,3 +85,17 @@ HarmonyOS 页面销毁时调用请求 `cancel()`；每个 client 仅内存缓存
 - [版本与发行说明](https://github.com/gycrosskit/location/releases)、[问题反馈](https://github.com/gycrosskit/location/issues)。
 
 Apache-2.0，见 [LICENSE](LICENSE)。
+
+## 0.1.1 候选：Kuikly 单次定位（待发布）
+
+新增 `location-kuikly` 与原生 `GycLocationModule`，每个Page各注册一个对应Module。
+候选发布后 Maven 显式选择 `location-core:0.1.1`，OHOS 额外依赖 `location-kuikly:0.1.1`，原生 HAR 为 `@gycrosskit/location-native@0.1.1`；本地归档不代表这些远程坐标已可安装。计划使用 prerelease 与 OHPM `next`，保持稳定 `latest`。
+
+```kotlin
+val location = io.github.gycrosskit.location.kuikly.LocationModule(bridgeTimeoutMillis = 12_000)
+val result = location.currentLocation(LocationOptions(timeoutMillis = 10_000, maxAgeMillis = 300_000, maxAccuracyMeters = 500.0))
+// pageWillDestroy: location.dispose()
+```
+
+宿主映射业务坐标/结果；协程取消、超时和dispose同时取消原生定位，旧请求ID不能停止后继请求。原生Client验证系统时间、缓存和精度；组件不弹权限申请、不转换坐标系。
+`location-core` 新增OHOS变体；发布时同时核验原Android/iOS/JVM消费者，不能只验证新Kuikly模块。

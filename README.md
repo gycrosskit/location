@@ -6,13 +6,13 @@
 
 OHPM `next` 提交已接受，仍在审核；精确版本查询及独立 Registry 安装返回 NOTFOUND。稳定 Registry `latest` 仍为 0.1.0，Release HAR 可下载不代表 Registry 可安装。
 
-## 0.1.2 发布候选
+## 0.1.2 prerelease
 
 Kuikly watchdog 以请求期限加 2 秒回执余量、构造器指定最短等待中的较大者结算，避免提前截断长请求；超时明确返回 TimedOut，空原生回执保持 Unavailable。现有 10 秒请求/12 秒桥接等待保持。
 
 | 渠道 | 本轮版本 | 状态 |
 | --- | --- | --- |
-| Maven core/Kuikly | 0.1.2 | 待完整归档和真实远程消费 |
+| Maven core/Kuikly | 0.1.2 | JitPack 全文件/hash 与 Android/OHOS/三 iOS 编译、Simulator 链接通过 |
 | HarmonyOS HAR | 0.1.1 | 原生源码未变，沿用旧 Release 已验产物 |
 
 

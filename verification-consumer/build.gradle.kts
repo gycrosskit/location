@@ -2,7 +2,7 @@ plugins {
     kotlin("multiplatform") version "2.2.21-1.0.0"
     id("com.android.library") version "8.10.1"
 }
-val locationVersion = providers.gradleProperty("locationVersion").orElse("0.1.1").get()
+val locationVersion = providers.gradleProperty("locationVersion").orElse("0.1.2").get()
 kotlin {
     androidTarget()
     jvm()

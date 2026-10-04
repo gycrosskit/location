@@ -111,3 +111,5 @@ val result = location.currentLocation(LocationOptions(timeoutMillis = 10_000, ma
 
 宿主映射业务坐标/结果；协程取消、超时和dispose同时取消原生定位，旧请求ID不能停止后继请求。原生Client验证系统时间、缓存和精度；组件不弹权限申请、不转换坐标系。
 `location-core` 新增OHOS变体；发布时同时核验原Android/iOS/JVM消费者，不能只验证新Kuikly模块。
+
+本轮制品校验与远程状态见 [0.1.2 发布验收](docs/发布验收-0.1.2.md)。

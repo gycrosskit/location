@@ -39,14 +39,19 @@ class LocationModule(private val bridgeTimeoutMillis: Long = 12_000L) : Module()
             put("maxAccuracyMeters", options.maxAccuracyMeters)
         }
         val response = try {
-            withTimeoutOrNull(bridgeTimeoutMillis) { await(args) }
+            // 原生按请求 deadline 结算，桥接留回执余量；保留旧参数作为 watchdog 最短等待。
+            withTimeoutOrNull(maxOf(bridgeTimeoutMillis, options.timeoutMillis + BRIDGE_REPLY_GRACE_MILLIS)) {
+                // 原生空回执仍表示不可用，与 watchdog 到期的 null 分开。
+                await(args) ?: JSONObject()
+            }
         } finally {
             cancelNative(requestId)
             if (activeRequestId == requestId) activeRequestId = null
         }
         // resume 后结果可能仍在协程队列；dispose 必须拦截已完成回调的迟交付。
         if (disposed) throw CancellationException("LocationModule is disposed")
-        when (response?.optString("status")) {
+        if (response == null) return@withLock LocationResult.TimedOut
+        when (response.optString("status")) {
             "permission_missing" -> LocationResult.PermissionMissing
             "service_disabled" -> LocationResult.ServiceDisabled
             "timed_out" -> LocationResult.TimedOut
@@ -89,5 +94,8 @@ class LocationModule(private val bridgeTimeoutMillis: Long = 12_000L) : Module()
         pending.toList().forEach { it.cancel() }
         pending.clear()
     }
-    companion object { const val NAME = "GycLocationModule" }
+    companion object {
+        const val NAME = "GycLocationModule"
+        private const val BRIDGE_REPLY_GRACE_MILLIS = 2_000L
+    }
 }

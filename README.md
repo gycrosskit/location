@@ -2,9 +2,19 @@
 
 前台单次定位，提供权限/服务状态、取消、超时、缓存时效和精度过滤。保留系统原始坐标；权限申请、地址查询、坐标转换和业务精度要求由宿主负责。
 
-本轮 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；安装示例使用候选精确版本，设备定位尚未验收。
+本轮 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；该段为 0.1.1 历史验收；本轮 Maven 安装版本及待验状态见下方矩阵，设备定位尚未验收。
 
 OHPM `next` 提交已接受，仍在审核；精确版本查询及独立 Registry 安装返回 NOTFOUND。稳定 Registry `latest` 仍为 0.1.0，Release HAR 可下载不代表 Registry 可安装。
+
+## 0.1.2 发布候选
+
+Kuikly watchdog 以请求期限加 2 秒回执余量、构造器指定最短等待中的较大者结算，避免提前截断长请求；超时明确返回 TimedOut，空原生回执保持 Unavailable。现有 10 秒请求/12 秒桥接等待保持。
+
+| 渠道 | 本轮版本 | 状态 |
+| --- | --- | --- |
+| Maven core/Kuikly | 0.1.2 | 待完整归档和真实远程消费 |
+| HarmonyOS HAR | 0.1.1 | 原生源码未变，沿用旧 Release 已验产物 |
+
 
 ## 平台与要求
 
@@ -32,10 +42,10 @@ dependencyResolutionManagement {
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.gycrosskit.location:location-core:0.1.1")
+    implementation("com.github.gycrosskit.location:location-core:0.1.2")
 }
 ohosArm64Main.dependencies {
-    implementation("com.github.gycrosskit.location:location-kuikly:0.1.1")
+    implementation("com.github.gycrosskit.location:location-kuikly:0.1.2")
 }
 ```
 
@@ -101,3 +111,5 @@ val result = location.currentLocation(LocationOptions(timeoutMillis = 10_000, ma
 
 宿主映射业务坐标/结果；协程取消、超时和dispose同时取消原生定位，旧请求ID不能停止后继请求。原生Client验证系统时间、缓存和精度；组件不弹权限申请、不转换坐标系。
 `location-core` 新增OHOS变体；发布时同时核验原Android/iOS/JVM消费者，不能只验证新Kuikly模块。
+
+本轮制品校验与远程状态见 [0.1.2 发布验收](docs/发布验收-0.1.2.md)。

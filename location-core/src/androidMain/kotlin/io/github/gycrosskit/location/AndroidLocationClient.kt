@@ -15,6 +15,10 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
 
+/**
+ * Android GPS/网络定位；自动切到主线程，粗略授权仅访问网络 provider。
+ * @param context 仅保留 applicationContext，不持有 Activity。
+ */
 class AndroidLocationClient(context: Context) : LocationClient {
     private val context = context.applicationContext
     private val manager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager

@@ -17,7 +17,10 @@ import kotlin.coroutines.resume
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-/** 每个 Page 注册一个实例；取消时停止同一原生请求，不只释放 Kotlin 回调。 */
+/**
+ * 每个 Page 一个实例，在页面协程上下文调用及销毁；串行定位，取消时停止对应原生请求。
+ * @param bridgeTimeoutMillis 桥 watchdog 最短预算，正毫秒，默认 12000；实际至少等待请求期限加 2000 毫秒回执余量。
+ */
 class LocationModule(private val bridgeTimeoutMillis: Long = 12_000L) : Module(), LocationClient {
     private val mutex = Mutex()
     private var disposed = false
@@ -87,6 +90,7 @@ class LocationModule(private val bridgeTimeoutMillis: Long = 12_000L) : Module()
         asyncToNativeMethod("cancelLocation", JSONObject().apply { put("requestId", requestId) }, null)
     }
 
+    /** 页面销毁时调用；幂等，停止原生定位并取消挂起调用，销毁后请求失败。 */
     fun dispose() {
         if (disposed) return
         disposed = true
@@ -95,6 +99,7 @@ class LocationModule(private val bridgeTimeoutMillis: Long = 12_000L) : Module()
         pending.clear()
     }
     companion object {
+        /** 与原生注册名一致的桥名称。 */
         const val NAME = "GycLocationModule"
         private const val BRIDGE_REPLY_GRACE_MILLIS = 2_000L
     }

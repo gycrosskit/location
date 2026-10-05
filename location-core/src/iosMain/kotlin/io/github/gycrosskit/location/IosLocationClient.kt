@@ -13,6 +13,7 @@ import platform.Foundation.timeIntervalSince1970
 import platform.darwin.NSObject
 import kotlin.coroutines.resume
 
+/** iOS CoreLocation 实现；每次请求独占 manager/delegate，自动切主线程，宿主提前申请权限。 */
 @OptIn(ExperimentalForeignApi::class)
 class IosLocationClient : LocationClient {
     override suspend fun currentLocation(options: LocationOptions): LocationResult = withContext(Dispatchers.Main.immediate) {

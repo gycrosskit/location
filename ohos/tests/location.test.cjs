@@ -33,7 +33,33 @@ vm.runInNewContext(ts.transpileModule(source, {compilerOptions: {module: ts.Modu
   listener({latitude: 30, longitude: 120, accuracy: 20, timeStamp: Date.now()});
   assert.equal((await pending.result).status, 'available'); assert.equal(removes, 3);
   assert.equal((await client.currentLocation().result).status, 'available'); assert.equal(removes, 3);
-  const bad = new LocationOptions(); bad.timeoutMillis = 0;
-  assert.throws(() => client.currentLocation(bad));
+  const isolated = new LocationClient();
+  const old = isolated.currentLocation(), oldListener = listener;
+  old.cancel();
+  oldListener({latitude: 30, longitude: 120, accuracy: 1, timeStamp: Date.now()});
+  assert.equal((await old.result).status, 'cancelled');
+  const replacement = isolated.currentLocation();
+  assert.notEqual(listener, oldListener, 'cancelled read cannot populate cache for successor');
+  oldListener({latitude: 30, longitude: 120, accuracy: 1, timeStamp: Date.now()});
+  const beforeReplacement = removes;
+  listener({latitude: Infinity, longitude: 120, accuracy: 1, timeStamp: Date.now()});
+  listener({latitude: 30, longitude: 120, accuracy: 1, timeStamp: Date.now() + 10000});
+  assert.equal(removes, beforeReplacement);
+  replacement.cancel();
+  assert.equal((await replacement.result).status, 'cancelled');
+  for (const [field, value] of [['timeoutMillis', 0], ['timeoutMillis', 2147483648],
+    ['timeoutMillis', 1.5], ['maxAgeMillis', -1], ['maxAgeMillis', NaN],
+    ['maxAccuracyMeters', -1], ['maxAccuracyMeters', Infinity]]) {
+    const bad = new LocationOptions(); bad[field] = value;
+    assert.throws(() => client.currentLocation(bad), /Invalid location options/);
+  }
+  const revoked = new LocationClient().currentLocation(options);
+  granted = false;
+  assert.equal((await revoked.result).status, 'permission_missing', 'timeout rechecks revoked permission');
+  granted = true;
+  const switchedOff = new LocationClient().currentLocation(options);
+  enabled = false;
+  assert.equal((await switchedOff.result).status, 'service_disabled', 'timeout rechecks system service');
+  enabled = true;
   console.log('location HAR contract checks passed');
 })().catch(error => { console.error(error); process.exitCode = 1; });

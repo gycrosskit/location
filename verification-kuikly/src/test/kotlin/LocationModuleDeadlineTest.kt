@@ -8,6 +8,44 @@ import kotlinx.coroutines.test.*
 import kotlin.test.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class LocationModuleDeadlineTest {
+    @Test fun `cancelled request cannot deliver to serialized successor`() = runTest {
+        val module = LocationModule()
+        val first = async { module.currentLocation() }
+        runCurrent()
+        val oldResponse = module.response
+        val second = async { module.currentLocation() }
+        runCurrent()
+        assertEquals(1, module.calls.size)
+        first.cancel()
+        runCurrent()
+        assertEquals(2, module.calls.size)
+        assertEquals(1, module.cancelled.size)
+        assertEquals(1, module.removedCallbacks)
+        oldResponse(JSONObject().apply { put("status", "permission_missing") })
+        runCurrent()
+        assertFalse(second.isCompleted)
+        module.response(JSONObject().apply { put("status", "service_disabled") })
+        assertEquals(LocationResult.ServiceDisabled, second.await())
+        assertEquals(2, module.cancelled.size)
+        assertEquals(2, module.removedCallbacks)
+        module.dispose()
+    }
+
+    @Test fun `invalid native fix never escapes as available`() = runTest {
+        val module = LocationModule()
+        val result = async { module.currentLocation() }
+        runCurrent()
+        module.response(JSONObject().apply {
+            put("status", "available")
+            put("latitude", 91.0)
+            put("longitude", 120.0)
+            put("accuracy", 20.0)
+            put("timestampMillis", 0L)
+        })
+        assertEquals(LocationResult.Unavailable, result.await())
+        assertEquals(1, module.removedCallbacks)
+    }
+
     @Test fun `thirty second request is not cut off by twelve second bridge`() = runTest {
         val module = LocationModule()
         val result = async { module.currentLocation(LocationOptions(timeoutMillis = 30_000)) }

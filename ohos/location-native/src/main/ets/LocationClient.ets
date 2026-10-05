@@ -2,23 +2,38 @@ import { abilityAccessCtrl } from '@kit.AbilityKit';
 import { geoLocationManager } from '@kit.LocationKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 
+/** 单次定位验收条件；由 currentLocation 在启动系统监听前校验。 */
 export class LocationOptions {
+  /** 等待期限，毫秒，安全整数 1..2147483647，默认 12000。 */
   timeoutMillis: number = 12000;
+  /** 缓存最大年龄，毫秒，非负安全整数，默认 300000。 */
   maxAgeMillis: number = 300000;
+  /** 最大水平误差半径，米，有限且非负，默认 500。 */
   maxAccuracyMeters: number = 500;
 }
+/** 系统原始读数，不做坐标系转换或地理编码。 */
 export interface LocationFix {
+  /** 纬度，角度，-90..90。 */
   latitude: number;
+  /** 经度，角度，-180..180。 */
   longitude: number;
+  /** 水平误差半径，米，有限且非负。 */
   accuracyMeters: number;
+  /** 定位时间，Unix epoch 毫秒；未来读数拒绝。 */
   timestampMillis: number;
 }
+/** 单次定位终态；cancelled 表示宿主取消，不代表 SDK 失败。 */
 export interface LocationResult {
+  /** available 时携带 fix，其余状态不保证坐标。 */
   status: 'available' | 'permission_missing' | 'service_disabled' | 'timed_out' | 'unavailable' | 'cancelled';
+  /** 仅成功时存在且符合本次验收条件。 */
   fix?: LocationFix;
 }
+/** 宿主拥有的单次请求句柄；取消立即解除本次监听。 */
 export interface LocationRequest {
+  /** 完成、超时或取消时结算一次；系统错误映射为 LocationResult。 */
   result: Promise<LocationResult>;
+  /** 幂等取消，结果为 cancelled，不影响其他请求。 */
   cancel: () => void;
 }
 
@@ -27,6 +42,11 @@ export class LocationClient {
   private readonly access = abilityAccessCtrl.createAtManager();
   private cached: LocationFix | undefined;
 
+  /**
+   * UIAbility 主线程调用；先读权限/服务，再复用合格缓存或监听新读数。
+   * @param options 毫秒/米阈值，默认 LocationOptions；无效输入在启动监听前抛错。
+   * @returns 宿主负责在离开页面时取消的独占请求。
+   */
   currentLocation(options: LocationOptions = new LocationOptions()): LocationRequest {
     if (!Number.isSafeInteger(options.timeoutMillis) || options.timeoutMillis <= 0 || options.timeoutMillis > 2147483647 ||
       !Number.isSafeInteger(options.maxAgeMillis) || options.maxAgeMillis < 0 ||

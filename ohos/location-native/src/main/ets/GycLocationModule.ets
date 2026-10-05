@@ -10,6 +10,7 @@ interface RequestParams {
 
 /** 单笔定位桥；旧取消回执不能终止后继请求。 */
 export class GycLocationModule extends KuiklyRenderBaseModule {
+  /** 原生注册名，与 Kotlin LocationModule.NAME 一致。 */
   static readonly MODULE_NAME: string = 'GycLocationModule';
   private readonly client: LocationClient = new LocationClient();
   private active: LocationRequest | null = null;

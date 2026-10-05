@@ -28,9 +28,9 @@ Kuikly watchdog 以请求期限加 2 秒回执余量、构造器指定最短等�
 
 KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。稳定 0.1.0 无 Kuikly/OHOS KMP 桥；0.1.1 候选新增 `location-kuikly` 与 core 的 `ohosArm64` 变体。不提供 Swift Package；JVM 变体只含公共 API/数据与测试逻辑，无 JVM 定位实现。
 
-## 0.1.3 候选（未发布）
+## 0.1.3 发布状态
 
-本轮 Maven core/Kuikly 与 HAR 同为 `0.1.3`，尚未发布；下文安装坐标用于发布后的精确消费。
+Maven core/Kuikly `0.1.3` 已提供 GitHub 预发行，JitPack 的精确标签/提交、完整 publication 和实际文件校验通过。Release HAR 已重下载校验；OHPM 以独立 `candidate-0.1.3` 标签提交审核，精确 Registry 安装仍返回 NOTFOUND，旧 next 保持。详情见[0.1.3 发布验收](docs/0.1.3发布验收.md)。
 
 iOS 等待定位期间授权改为 `Restricted` 与 `Denied` 均返回 `PermissionMissing`；HAR 不允许负 Unix 时间戳通过较大的缓存预算变成有效读数。原生权限/设置差异与既有版本发布状态保持下文记录。
 

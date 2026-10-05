@@ -4,15 +4,17 @@
 
 前台单次定位，提供权限/服务状态、取消、超时、缓存时效和精度过滤。保留系统原始坐标；权限申请、地址查询、坐标转换和业务精度要求由宿主负责。
 
-本轮 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；该段为 0.1.1 历史验收；本轮 Maven 安装版本及待验状态见下方矩阵，设备定位尚未验收。
+## 0.1.1 历史 prerelease
+
+当时 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；该段为 0.1.1 历史验收；当前 0.1.3 安装版本及状态见下方发布状态，设备定位尚未验收。
 
 OHPM `next` 提交已接受，仍在审核；精确版本查询及独立 Registry 安装返回 NOTFOUND。稳定 Registry `latest` 仍为 0.1.0，Release HAR 可下载不代表 Registry 可安装。
 
-## 0.1.2 prerelease
+## 0.1.2 历史 prerelease
 
 Kuikly watchdog 以请求期限加 2 秒回执余量、构造器指定最短等待中的较大者结算，避免提前截断长请求；超时明确返回 TimedOut，空原生回执保持 Unavailable。现有 10 秒请求/12 秒桥接等待保持。
 
-| 渠道 | 本轮版本 | 状态 |
+| 渠道 | 当时版本 | 历史状态 |
 | --- | --- | --- |
 | Maven core/Kuikly | 0.1.2 | JitPack 全文件/hash 与 Android/OHOS/三 iOS 编译、Simulator 链接通过 |
 | HarmonyOS HAR | 0.1.1 | 原生源码未变，沿用旧 Release 已验产物 |
@@ -26,11 +28,11 @@ Kuikly watchdog 以请求期限加 2 秒回执余量、构造器指定最短等�
 | iOS | KMP `location-core`，`CoreLocation` | iOS 14+（使用实例 `authorizationStatus` API） |
 | HarmonyOS | 原生 `location-native` HAR，`geoLocationManager` | 当前 HAR 的 target/compatible SDK 均为 API 22 |
 
-KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。稳定 0.1.0 无 Kuikly/OHOS KMP 桥；0.1.1 候选新增 `location-kuikly` 与 core 的 `ohosArm64` 变体。不提供 Swift Package；JVM 变体只含公共 API/数据与测试逻辑，无 JVM 定位实现。
+KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。稳定 0.1.0 无 Kuikly/OHOS KMP 桥；历史 0.1.1 新增 `location-kuikly` 与 core 的 `ohosArm64` 变体。不提供 Swift Package；JVM 变体只含公共 API/数据与测试逻辑，无 JVM 定位实现。
 
 ## 0.1.3 发布状态
 
-Maven core/Kuikly `0.1.3` 已提供 GitHub 预发行，JitPack 的精确标签/提交、完整 publication 和实际文件校验通过。Release HAR 已重下载校验；OHPM 以独立 `candidate-0.1.3` 标签提交审核，精确 Registry 安装仍返回 NOTFOUND，旧 next 保持。详情见[0.1.3 发布验收](docs/0.1.3发布验收.md)。
+Maven core/Kuikly `0.1.3` 已提供 GitHub 预发行，JitPack 的精确标签/提交、完整 publication 和实际文件校验通过。Release HAR 已重下载校验；OHPM 以独立 `candidate-0.1.3` 标签提交审核，精确 Registry 安装仍返回 NOTFOUND，旧 next 保持。全新远程 Maven 的 Android/iOS/OHOS 消费与 Simulator Framework 链接已通过，另含 JVM 编译。详情见[0.1.3 发布验收](docs/0.1.3发布验收.md)。
 
 iOS 等待定位期间授权改为 `Restricted` 与 `Denied` 均返回 `PermissionMissing`；HAR 不允许负 Unix 时间戳通过较大的缓存预算变成有效读数。原生权限/设置差异与既有版本发布状态保持下文记录。
 
@@ -187,4 +189,4 @@ val result = location.currentLocation(LocationOptions(timeoutMillis = 10_000, ma
 宿主映射业务坐标/结果；协程取消、超时和dispose同时取消原生定位，旧请求ID不能停止后继请求。原生Client验证系统时间、缓存和精度；组件不弹权限申请、不转换坐标系。
 `location-core` 新增OHOS变体；发布时同时核验原Android/iOS/JVM消费者，不能只验证新Kuikly模块。
 
-本轮制品校验与远程状态见 [0.1.2 发布验收](docs/发布验收-0.1.2.md)。
+本轮制品校验与远程状态见 [0.1.3 发布验收](docs/0.1.3发布验收.md)；历史记录见 [0.1.2 发布验收](docs/发布验收-0.1.2.md)。

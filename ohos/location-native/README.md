@@ -1,9 +1,11 @@
 # @gycrosskit/location-native
 
+本轮 HAR 候选为 `0.1.3`，尚未发布；下面精确安装命令用于发布并确认可见后，历史验收不代表本候选已验收。
+
 前台单次定位，支持超时、精度/时效过滤及取消。当前 HAR target/compatible SDK 为 HarmonyOS API 22。
 
 ```sh
-ohpm install @gycrosskit/location-native@0.1.0
+ohpm install @gycrosskit/location-native@0.1.3
 ```
 
 ```typescript

@@ -39,9 +39,7 @@ class IosLocationClient : LocationClient {
                         },
                         onFailure = {
                             if (pending.isActive) pending.resume(
-                                if (manager.authorizationStatus == kCLAuthorizationStatusDenied) LocationResult.PermissionMissing
-                                else if (!CLLocationManager.locationServicesEnabled()) LocationResult.ServiceDisabled
-                                else LocationResult.Unavailable
+                                locationFailure(manager.authorizationStatus, CLLocationManager.locationServicesEnabled())
                             )
                         },
                     )
@@ -69,4 +67,11 @@ class IosLocationClient : LocationClient {
             if (manager.authorizationStatus == kCLAuthorizationStatusDenied || manager.authorizationStatus == kCLAuthorizationStatusRestricted) onFailure()
         }
     }
+}
+
+/** 等待期间权限与服务可发生变化；受系统策略限制与用户拒绝均缺少定位授权。 */
+internal fun locationFailure(status: CLAuthorizationStatus, servicesEnabled: Boolean): LocationResult = when {
+    status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted -> LocationResult.PermissionMissing
+    !servicesEnabled -> LocationResult.ServiceDisabled
+    else -> LocationResult.Unavailable
 }

@@ -53,6 +53,11 @@ vm.runInNewContext(ts.transpileModule(source, {compilerOptions: {module: ts.Modu
     const bad = new LocationOptions(); bad[field] = value;
     assert.throws(() => client.currentLocation(bad), /Invalid location options/);
   }
+  const ancientOptions = new LocationOptions(); ancientOptions.maxAgeMillis = Number.MAX_SAFE_INTEGER;
+  const ancient = new LocationClient().currentLocation(ancientOptions), beforeAncient = removes;
+  listener({latitude: 30, longitude: 120, accuracy: 1, timeStamp: -1});
+  assert.equal(removes, beforeAncient, 'negative Unix timestamp cannot become valid through a large cache budget');
+  ancient.cancel(); assert.equal((await ancient.result).status, 'cancelled');
   const revoked = new LocationClient().currentLocation(options);
   granted = false;
   assert.equal((await revoked.result).status, 'permission_missing', 'timeout rechecks revoked permission');

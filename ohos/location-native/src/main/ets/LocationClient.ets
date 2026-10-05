@@ -113,6 +113,6 @@ export class LocationClient {
     return Number.isFinite(fix.latitude) && fix.latitude >= -90 && fix.latitude <= 90 &&
       Number.isFinite(fix.longitude) && fix.longitude >= -180 && fix.longitude <= 180 &&
       Number.isFinite(fix.accuracyMeters) && fix.accuracyMeters >= 0 && fix.accuracyMeters <= options.maxAccuracyMeters &&
-      Number.isFinite(age) && age >= 0 && age <= options.maxAgeMillis;
+      fix.timestampMillis >= 0 && Number.isFinite(age) && age >= 0 && age <= options.maxAgeMillis;
   }
 }

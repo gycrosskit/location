@@ -190,3 +190,13 @@ val result = location.currentLocation(LocationOptions(timeoutMillis = 10_000, ma
 `location-core` 新增OHOS变体；发布时同时核验原Android/iOS/JVM消费者，不能只验证新Kuikly模块。
 
 本轮制品校验与远程状态见 [0.1.3 发布验收](docs/0.1.3发布验收.md)；历史记录见 [0.1.2 发布验收](docs/发布验收-0.1.2.md)。
+
+## 自动回归
+
+[Component regression](.github/workflows/regression.yml) 在 PR 和 `main` 更新时运行现有 Python/Node 契约测试、Android 单元测试及编译，以及 macOS 上的 iOS/OHOS KLIB 编译；已有 iOS、JVM、Kuikly 独立测试也按该 workflow 执行。Release 发布或手动指定不可变版本后，校验 Release Maven 归档的 SHA-256、POM、metadata 与文件引用，并从 JitPack 独立编译 Android 消费者、链接 iOS 消费者、编译 OHOS Kuikly 消费者。此流程不发布二进制。
+
+OHOS KLIB 编译不代表 HAR 构建、ohpm 上架或真机验收。当前没有已确认可用的 DevEco/Hvigor runner，这些检查尚未自动化，不能作为 CI 通过范围。
+
+PR 的发布回归固定验证已发布 `0.1.3` 基线，五个 job 都通过后才合并；Release 事件使用其精确标签。基线证明远程产物可消费，不代表 PR 新源码已发布。
+
+已发布 `0.1.3` 的 iOS KLIB 引用了 SDK 26 的 `_LocationEssentials`，独立 Framework 链接需要 Xcode 26/iOS SDK 26；`release-native` 明确选择 runner 已安装的 Xcode 26.0.1 并打印版本/SDK 清单。该构建 SDK 门槛不提高组件现有 iOS 14+ 的 deployment target，也不新增系统 API。

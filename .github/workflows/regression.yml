@@ -104,6 +104,7 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 60
     env:
+      DEVELOPER_DIR: /Applications/Xcode_26.0.1.app/Contents/Developer
       VERSION: ${{ github.event.release.tag_name || inputs.version || '0.1.3' }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
@@ -114,6 +115,11 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: gradle
+      # 0.1.3 的 CoreLocation KLIB 由 SDK 26 产生；SDK 18.5 缺少其链接引用。
+      - run: |
+          xcodebuild -version
+          xcodebuild -showsdks
+          test "$(xcrun --sdk iphonesimulator --show-sdk-version)" = 26.0
       - run: bash scripts/ci-release.sh
       - run: |
           case "$(uname -m)" in

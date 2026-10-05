@@ -198,3 +198,5 @@ val result = location.currentLocation(LocationOptions(timeoutMillis = 10_000, ma
 OHOS KLIB 编译不代表 HAR 构建、ohpm 上架或真机验收。当前没有已确认可用的 DevEco/Hvigor runner，这些检查尚未自动化，不能作为 CI 通过范围。
 
 PR 的发布回归固定验证已发布 `0.1.3` 基线，五个 job 都通过后才合并；Release 事件使用其精确标签。基线证明远程产物可消费，不代表 PR 新源码已发布。
+
+已发布 `0.1.3` 的 iOS KLIB 引用了 SDK 26 的 `_LocationEssentials`，独立 Framework 链接需要 Xcode 26/iOS SDK 26；`release-native` 明确选择 runner 已安装的 Xcode 26.0.1 并打印版本/SDK 清单。该构建 SDK 门槛不提高组件现有 iOS 14+ 的 deployment target，也不新增系统 API。

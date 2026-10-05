@@ -1,5 +1,7 @@
 # GY CrossKit Location
 
+[本轮完整源码审查](docs/完整源码审查.md) 列出全部生产文件、公开调用链、实际验证与未测项。
+
 前台单次定位，提供权限/服务状态、取消、超时、缓存时效和精度过滤。保留系统原始坐标；权限申请、地址查询、坐标转换和业务精度要求由宿主负责。
 
 本轮 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；该段为 0.1.1 历史验收；本轮 Maven 安装版本及待验状态见下方矩阵，设备定位尚未验收。
@@ -25,6 +27,12 @@ Kuikly watchdog 以请求期限加 2 秒回执余量、构造器指定最短等�
 | HarmonyOS | 原生 `location-native` HAR，`geoLocationManager` | 当前 HAR 的 target/compatible SDK 均为 API 22 |
 
 KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。稳定 0.1.0 无 Kuikly/OHOS KMP 桥；0.1.1 候选新增 `location-kuikly` 与 core 的 `ohosArm64` 变体。不提供 Swift Package；JVM 变体只含公共 API/数据与测试逻辑，无 JVM 定位实现。
+
+## 0.1.3 候选（未发布）
+
+本轮 Maven core/Kuikly 与 HAR 同为 `0.1.3`，尚未发布；下文安装坐标用于发布后的精确消费。
+
+iOS 等待定位期间授权改为 `Restricted` 与 `Denied` 均返回 `PermissionMissing`；HAR 不允许负 Unix 时间戳通过较大的缓存预算变成有效读数。原生权限/设置差异与既有版本发布状态保持下文记录。
 
 ## 架构与调用流程
 
@@ -109,17 +117,17 @@ dependencyResolutionManagement {
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.gycrosskit.location:location-core:0.1.2")
+    implementation("com.github.gycrosskit.location:location-core:0.1.3")
 }
 ohosArm64Main.dependencies {
-    implementation("com.github.gycrosskit.location:location-kuikly:0.1.2")
+    implementation("com.github.gycrosskit.location:location-kuikly:0.1.3")
 }
 ```
 
 HarmonyOS 原生包独立安装，候选正式可查询后执行；发布接受与 Registry 可安装分别核验：
 
 ```sh
-ohpm install @gycrosskit/location-native@0.1.1
+ohpm install @gycrosskit/location-native@0.1.3
 ```
 
 ## 最小使用

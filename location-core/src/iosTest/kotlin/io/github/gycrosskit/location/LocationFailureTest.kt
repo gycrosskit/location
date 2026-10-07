@@ -11,5 +11,8 @@ class LocationFailureTest {
         assertEquals(LocationResult.PermissionMissing, locationFailure(kCLAuthorizationStatusRestricted, false))
         assertEquals(LocationResult.ServiceDisabled, locationFailure(kCLAuthorizationStatusAuthorizedWhenInUse, false))
         assertEquals(LocationResult.Unavailable, locationFailure(kCLAuthorizationStatusAuthorizedWhenInUse, true))
+        assertEquals(LocationResult.PermissionMissing, locationFailure(kCLAuthorizationStatusDenied, true, LocationResult.TimedOut))
+        assertEquals(LocationResult.ServiceDisabled, locationFailure(kCLAuthorizationStatusAuthorizedWhenInUse, false, LocationResult.TimedOut))
+        assertEquals(LocationResult.TimedOut, locationFailure(kCLAuthorizationStatusAuthorizedWhenInUse, true, LocationResult.TimedOut))
     }
 }

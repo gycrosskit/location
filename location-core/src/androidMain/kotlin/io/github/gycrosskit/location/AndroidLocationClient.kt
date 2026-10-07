@@ -66,7 +66,12 @@ class AndroidLocationClient(context: Context) : LocationClient {
                         if (pending.isActive) pending.resume(LocationResult.Unavailable)
                     }
                 }
-            } ?: LocationResult.TimedOut
+            } ?: when {
+                // 等待期间权限可能被撤销且没有位置回调；与其他平台一样在 deadline 重读系统事实。
+                !hasPermission() -> LocationResult.PermissionMissing
+                providers.none { service.isProviderEnabled(it) } -> LocationResult.ServiceDisabled
+                else -> LocationResult.TimedOut
+            }
         } catch (_: SecurityException) {
             LocationResult.PermissionMissing
         } catch (cancelled: CancellationException) {

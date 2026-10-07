@@ -46,7 +46,11 @@ class IosLocationClient : LocationClient {
                     manager.delegate = delegate
                     manager.startUpdatingLocation()
                 }
-            } ?: LocationResult.TimedOut
+            } ?: locationFailure(
+                manager.authorizationStatus,
+                CLLocationManager.locationServicesEnabled(),
+                fallback = LocationResult.TimedOut,
+            )
         } finally {
             manager.stopUpdatingLocation()
             manager.delegate = null
@@ -70,8 +74,12 @@ class IosLocationClient : LocationClient {
 }
 
 /** 等待期间权限与服务可发生变化；受系统策略限制与用户拒绝均缺少定位授权。 */
-internal fun locationFailure(status: CLAuthorizationStatus, servicesEnabled: Boolean): LocationResult = when {
+internal fun locationFailure(
+    status: CLAuthorizationStatus,
+    servicesEnabled: Boolean,
+    fallback: LocationResult = LocationResult.Unavailable,
+): LocationResult = when {
     status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted -> LocationResult.PermissionMissing
     !servicesEnabled -> LocationResult.ServiceDisabled
-    else -> LocationResult.Unavailable
+    else -> fallback
 }

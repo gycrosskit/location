@@ -6,6 +6,10 @@ kotlin {
         commonMain.dependencies { implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2-1.0.0") }
         androidMain.dependencies { implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2") }
         commonTest.dependencies { implementation(kotlin("test")) }
+        androidUnitTest.dependencies {
+            implementation("org.robolectric:robolectric:4.16")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2-1.0.0")
+        }
     }
 }
 android {

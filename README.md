@@ -16,9 +16,9 @@ core 提供前台单次定位、时效/精度过滤与取消；无地图或CMP U
 
 ## 0.1.1 历史 prerelease
 
-当时 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；该段为 0.1.1 历史验收；当前 0.1.3 安装版本及状态见下方发布状态，设备定位尚未验收。
+当时 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；该段为 0.1.1 历史验收；当前安装版本及状态见本页前部，设备定位尚未验收。
 
-OHPM `next` 提交已接受，仍在审核；精确版本查询及独立 Registry 安装返回 NOTFOUND。稳定 Registry `latest` 仍为 0.1.0，Release HAR 可下载不代表 Registry 可安装。
+以下为历史 0.1.1 查询状态：OHPM `next` 提交已接受，仍在审核；精确版本查询及独立 Registry 安装返回 NOTFOUND。稳定 Registry `latest` 仍为 0.1.0，Release HAR 可下载不代表 Registry 可安装。
 
 ## 0.1.2 历史 prerelease
 
@@ -129,10 +129,10 @@ dependencyResolutionManagement {
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.gycrosskit.location:location-core:0.1.3")
+    implementation("com.github.gycrosskit.location:location-core:0.1.5")
 }
 ohosArm64Main.dependencies {
-    implementation("com.github.gycrosskit.location:location-kuikly:0.1.3")
+    implementation("com.github.gycrosskit.location:location-kuikly:0.1.5")
 }
 ```
 

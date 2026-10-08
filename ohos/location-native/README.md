@@ -1,13 +1,13 @@
 # @gycrosskit/location-native
 
-2026-10-08 当前源码与三端/五入口边界见[功能与平台差异](../../docs/功能与平台差异.md)；本包只承担上文所述原生能力，以下版本和渠道记录按各自日期阅读。
+适用版本：HAR `0.1.4`，配套 Maven `0.1.5`。完整功能与五入口限制见[功能与平台差异](https://github.com/gycrosskit/location/blob/0.1.5/docs/功能与平台差异.md)；构建、固定 Release HAR 消费与 OHPM Registry 可安装性分别见[此版发布记录](https://github.com/gycrosskit/location/releases/tag/0.1.5)。
 
-本轮 HAR 候选为 `0.1.3`，尚未发布；下面精确安装命令用于发布并确认可见后，历史验收不代表本候选已验收。
+以下精确 Registry 安装命令需该版本审核上架；审核受理与固定 Release HAR 可下载不代表 Registry 已可安装。
 
 前台单次定位，支持超时、精度/时效过滤及取消。当前 HAR target/compatible SDK 为 HarmonyOS API 22。
 
 ```sh
-ohpm install @gycrosskit/location-native@0.1.3
+ohpm install @gycrosskit/location-native@0.1.4
 ```
 
 ```typescript

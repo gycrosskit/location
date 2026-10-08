@@ -1,16 +1,24 @@
 # GY CrossKit Location
 
-当前源码新增[跨端行为候选](docs/跨端行为候选.md)，尚未发布；下方远程版本验收仍对应其既有不可变标签。
+## 当前功能与平台边界
 
-[本轮完整源码审查](docs/完整源码审查.md) 列出全部生产文件、公开调用链、实际验证与未测项。
+core 提供前台单次定位、时效/精度过滤与取消；无地图或CMP UI，location-kuikly仅OHOS桥，A/i由宿主两套UI复用原生实现。
+
+适用版本：Maven 0.1.5；HAR 0.1.4。本次修复与平台边界见[功能与平台差异](docs/功能与平台差异.md)，构建与渠道验收见[版本发布记录](https://github.com/gycrosskit/location/releases/tag/0.1.5)；下方旧版本记录保留其历史范围。
+
+当前测试覆盖、执行时点和未验收项集中见[验证范围](docs/功能与平台差异.md#验证范围)，复现命令见[开发与验证](docs/开发与验证.md)。
+
+此版本包含已复核的跨端行为修复；[历史源码候选记录](docs/跨端行为候选.md)和下方旧版验收保持其原时点，当前范围见顶部功能与平台差异。
+
+[历史完整源码审查](docs/完整源码审查.md) 列出全部生产文件、公开调用链、实际验证与未测项。
 
 前台单次定位，提供权限/服务状态、取消、超时、缓存时效和精度过滤。保留系统原始坐标；权限申请、地址查询、坐标转换和业务精度要求由宿主负责。
 
 ## 0.1.1 历史 prerelease
 
-当时 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；该段为 0.1.1 历史验收；当前 0.1.3 安装版本及状态见下方发布状态，设备定位尚未验收。
+当时 Maven/HAR 候选为 0.1.1，[prerelease 已发布](https://github.com/gycrosskit/location/releases/tag/0.1.1)，实际下载 SHA 与 JitPack 全 9 个 module 的文件引用校验通过。独立真实 JitPack Android/JVM/OHOS/iOS 编译及 Simulator 最终链接、Release HAR 独立编译通过；该段为 0.1.1 历史验收；当前安装版本及状态见本页前部，设备定位尚未验收。
 
-OHPM `next` 提交已接受，仍在审核；精确版本查询及独立 Registry 安装返回 NOTFOUND。稳定 Registry `latest` 仍为 0.1.0，Release HAR 可下载不代表 Registry 可安装。
+以下为历史 0.1.1 查询状态：OHPM `next` 提交已接受，仍在审核；精确版本查询及独立 Registry 安装返回 NOTFOUND。稳定 Registry `latest` 仍为 0.1.0，Release HAR 可下载不代表 Registry 可安装。
 
 ## 0.1.2 历史 prerelease
 
@@ -121,17 +129,17 @@ dependencyResolutionManagement {
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.gycrosskit.location:location-core:0.1.3")
+    implementation("com.github.gycrosskit.location:location-core:0.1.5")
 }
 ohosArm64Main.dependencies {
-    implementation("com.github.gycrosskit.location:location-kuikly:0.1.3")
+    implementation("com.github.gycrosskit.location:location-kuikly:0.1.5")
 }
 ```
 
 HarmonyOS 原生包独立安装，候选正式可查询后执行；发布接受与 Registry 可安装分别核验：
 
 ```sh
-ohpm install @gycrosskit/location-native@0.1.3
+ohpm install @gycrosskit/location-native@0.1.4
 ```
 
 ## 最小使用
@@ -167,7 +175,7 @@ Android 声明并取得 `ACCESS_COARSE_LOCATION` / `ACCESS_FINE_LOCATION`；iOS 
 
 库不将粗略授权直接判失败，位置满足 `maxAccuracyMeters` 才返回成功；拒绝非法经纬度、未来/过期坐标和不合格精度。KMP 请求协程取消会清理独占系统监听，保留取消语义；完成和超时同样清理。iOS 平台操作内部切换主线程。Android 同时监听已启用的 GPS/网络 Provider，接受第一份合格位置。
 
-HarmonyOS 页面销毁时调用请求 `cancel()`；每个 client 仅内存缓存上次成功位置，每次读取重新检查权限、服务、时效和精度，不持久化位置。不提供后台或持续定位。GPS、室内/室外、权限和后台生命周期需真实设备验收。
+HarmonyOS 页面销毁时调用请求 `cancel()`；优先复用实例内的合格位置，否则读取系统上次位置；无历史位置或时效/精度不合格时等待新读数。每次读取重新检查权限、服务、时效和精度，不持久化位置。不提供后台或持续定位。GPS、室内/室外、权限和后台生命周期需真实设备验收。
 
 ## 文档与帮助
 

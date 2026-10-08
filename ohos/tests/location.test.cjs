@@ -3,9 +3,14 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const ts = require(process.env.TYPESCRIPT_PATH || '/Applications/DevEco-Studio.app/Contents/tools/ohpm/node_modules/typescript');
 const source = fs.readFileSync(__dirname + '/../location-native/src/main/ets/LocationClient.ets', 'utf8');
-let granted = true, enabled = true, listener, removes = 0;
+let granted = true, enabled = true, listener, removes = 0, systemCache, cacheError = 3301200, cacheReads = 0;
 const geoLocationManager = {
   LocationRequestPriority: { ACCURACY: 1 }, isLocationEnabled: () => enabled,
+  getLastLocation: () => {
+    cacheReads++;
+    if (!systemCache) throw Object.assign(new Error('No cached location'), {code: cacheError});
+    return systemCache;
+  },
   on: (_, options, callback) => { listener = callback; },
   off: (_, callback) => { assert.equal(callback, listener); removes++; },
 };
@@ -21,6 +26,25 @@ vm.runInNewContext(ts.transpileModule(source, {compilerOptions: {module: ts.Modu
   granted = true; enabled = false;
   assert.equal((await new LocationClient().currentLocation().result).status, 'service_disabled');
   enabled = true;
+  systemCache = {latitude: 30, longitude: 120, accuracy: 20, timeStamp: Date.now()};
+  assert.equal((await new LocationClient().currentLocation().result).status, 'available');
+  assert.equal(cacheReads, 1, 'a new client reads the system cache after permission/service checks');
+  assert.equal(listener, undefined, 'acceptable system cache does not start a listener');
+  for (const fix of [
+    {...systemCache, timeStamp: Date.now() - 400000}, {...systemCache, accuracy: 501},
+  ]) {
+    systemCache = fix;
+    const waiting = new LocationClient().currentLocation(), late = listener;
+    waiting.cancel();
+    late({latitude: 30, longitude: 120, accuracy: 1, timeStamp: Date.now()});
+    assert.equal((await waiting.result).status, 'cancelled', 'rejected system cache keeps cancellable live lookup');
+  }
+  systemCache = undefined; removes = 0;
+  for (const [code, status] of [[201, 'permission_missing'], [3301100, 'service_disabled']]) {
+    cacheError = code;
+    assert.equal((await new LocationClient().currentLocation().result).status, status);
+  }
+  cacheError = 3301200;
   const client = new LocationClient();
   const cancelled = client.currentLocation(); cancelled.cancel(); cancelled.cancel();
   assert.equal((await cancelled.result).status, 'cancelled'); assert.equal(removes, 1);

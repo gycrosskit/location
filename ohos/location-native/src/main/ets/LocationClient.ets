@@ -86,6 +86,13 @@ export class LocationClient {
         if (!geoLocationManager.isLocationEnabled()) { finish({ status: 'service_disabled' }); return; }
         const cached = this.cached;
         if (cached !== undefined && this.accepts(cached, options)) { finish({ status: 'available', fix: cached }); return; }
+        try {
+          listener(geoLocationManager.getLastLocation());
+          if (settled) { return; }
+        } catch (error) {
+          // 没有历史位置仍可等待新读数；权限、服务等错误沿用外层分类。
+          if ((error as BusinessError).code !== 3301200) { throw error as Error; }
+        }
         timer = setTimeout(() => {
           try {
             if (this.access.getSelfPermissionStatus('ohos.permission.APPROXIMATELY_LOCATION') !== abilityAccessCtrl.PermissionStatus.GRANTED) {

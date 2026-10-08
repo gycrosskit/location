@@ -17,12 +17,12 @@ import kotlin.coroutines.resume
 @OptIn(ExperimentalForeignApi::class)
 class IosLocationClient : LocationClient {
     override suspend fun currentLocation(options: LocationOptions): LocationResult = withContext(Dispatchers.Main.immediate) {
-        if (!CLLocationManager.locationServicesEnabled()) return@withContext LocationResult.ServiceDisabled
         val manager = CLLocationManager()
         if (manager.authorizationStatus != kCLAuthorizationStatusAuthorizedAlways &&
             manager.authorizationStatus != kCLAuthorizationStatusAuthorizedWhenInUse) {
             return@withContext LocationResult.PermissionMissing
         }
+        if (!CLLocationManager.locationServicesEnabled()) return@withContext LocationResult.ServiceDisabled
         manager.location?.toFix()?.takeIf { options.accepts(it, now()) }?.let {
             return@withContext LocationResult.Available(it)
         }
@@ -37,10 +37,10 @@ class IosLocationClient : LocationClient {
                             val fix = location.toFix()
                             if (options.accepts(fix, now()) && pending.isActive) pending.resume(LocationResult.Available(fix))
                         },
-                        onFailure = {
-                            if (pending.isActive) pending.resume(
-                                locationFailure(manager.authorizationStatus, CLLocationManager.locationServicesEnabled())
-                            )
+                        onFailure = { error ->
+                            val failure = locationFailure(manager.authorizationStatus,
+                                CLLocationManager.locationServicesEnabled(), error = error)
+                            if (failure != null && pending.isActive) pending.resume(failure)
                         },
                     )
                     manager.delegate = delegate
@@ -50,7 +50,7 @@ class IosLocationClient : LocationClient {
                 manager.authorizationStatus,
                 CLLocationManager.locationServicesEnabled(),
                 fallback = LocationResult.TimedOut,
-            )
+            ) ?: LocationResult.TimedOut
         } finally {
             manager.stopUpdatingLocation()
             manager.delegate = null
@@ -62,13 +62,13 @@ class IosLocationClient : LocationClient {
     private fun CLLocation.toFix() = coordinate.useContents {
         LocationFix(latitude, longitude, horizontalAccuracy, (timestamp.timeIntervalSince1970 * 1000).toLong())
     }
-    private class Delegate(val onLocation: (CLLocation) -> Unit, val onFailure: () -> Unit) : NSObject(), CLLocationManagerDelegateProtocol {
+    private class Delegate(val onLocation: (CLLocation) -> Unit, val onFailure: (NSError?) -> Unit) : NSObject(), CLLocationManagerDelegateProtocol {
         override fun locationManager(manager: CLLocationManager, didUpdateLocations: List<*>) {
             didUpdateLocations.filterIsInstance<CLLocation>().forEach(onLocation)
         }
-        override fun locationManager(manager: CLLocationManager, didFailWithError: NSError) { onFailure() }
+        override fun locationManager(manager: CLLocationManager, didFailWithError: NSError) { onFailure(didFailWithError) }
         override fun locationManagerDidChangeAuthorization(manager: CLLocationManager) {
-            if (manager.authorizationStatus == kCLAuthorizationStatusDenied || manager.authorizationStatus == kCLAuthorizationStatusRestricted) onFailure()
+            if (manager.authorizationStatus == kCLAuthorizationStatusDenied || manager.authorizationStatus == kCLAuthorizationStatusRestricted) onFailure(null)
         }
     }
 }
@@ -78,8 +78,11 @@ internal fun locationFailure(
     status: CLAuthorizationStatus,
     servicesEnabled: Boolean,
     fallback: LocationResult = LocationResult.Unavailable,
-): LocationResult = when {
+    error: NSError? = null,
+): LocationResult? = when {
     status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted -> LocationResult.PermissionMissing
     !servicesEnabled -> LocationResult.ServiceDisabled
+    // CoreLocation 会在暂时无法定位时报告此错误，仍可能随后交付位置；保留本次 deadline。
+    error?.domain == kCLErrorDomain && error.code == kCLErrorLocationUnknown -> null
     else -> fallback
 }

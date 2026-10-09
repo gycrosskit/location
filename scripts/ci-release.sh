@@ -23,5 +23,10 @@ EXTRACT
 python3 scripts/check-maven.py "$staging/maven" com.github.gycrosskit.location "$VERSION" location-core,location-kuikly ios_arm64,ios_x64,ios_simulator_arm64,ohos_arm64
 # 标签必须解析为不可变发布提交；不把当前 PR 的 SHA 当成已发布版本。
 commit="$(git ls-remote https://github.com/gycrosskit/location.git "refs/tags/$VERSION" "refs/tags/$VERSION^{}" | awk '$2 ~ /\^\{\}$/ {peeled=$1} $2 !~ /\^\{\}$/ {direct=$1} END {print peeled ? peeled : direct}')"
+publications=location-core,location-core-android,location-core-iosarm64,location-core-iosx64,location-core-iossimulatorarm64,location-core-ohosarm64,location-core-jvm,location-kuikly,location-kuikly-ohosarm64
+case "$VERSION" in
+  0.1.[0-5]) ;;
+  *) publications=location-core,location-core-android,location-core-iosarm64,location-core-iosx64,location-core-iossimulatorarm64,location-core-ohosarm64,location-core-jvm,location-kuikly,location-kuikly-android,location-kuikly-iosarm64,location-kuikly-iosx64,location-kuikly-iossimulatorarm64,location-kuikly-ohosarm64 ;;
+esac
 python3 scripts/check-public-maven.py --repo location --version "$VERSION" --commit "$commit" \
-  --expected-publications location-core,location-core-android,location-core-iosarm64,location-core-iosx64,location-core-iossimulatorarm64,location-core-ohosarm64,location-core-jvm,location-kuikly,location-kuikly-ohosarm64 --output-dir "${CI_DIAGNOSTICS_DIR:-ci-diagnostics}/public"
+  --expected-publications "$publications" --output-dir "${CI_DIAGNOSTICS_DIR:-ci-diagnostics}/public"

@@ -1,10 +1,13 @@
 # GY CrossKit Location
 
+本版源码 Maven `0.1.6` 提供 `location-kuikly` Android、iosArm64、iosX64、iosSimulatorArm64 targets、原生 receiver 和每 Renderer handler。iOS 可选 Pod `GycLocationKuikly/Kuikly` `0.1.6` 使用真实 `OpenKuiklyIOSRender 2.28.0`；Kotlin handler 由宿主已有 Shared framework 导出。发布与远程消费状态以[对应 Release](https://github.com/gycrosskit/location/releases/tag/0.1.6)为准。历史基线 Maven `0.1.5` 的 `-kuikly` 仅含 OHOS 变体；原 HAR 沿用。宿主需注册并维护已有原生能力 owner，示例见[接入指南](docs/接入指南.md#androidios-kuikly-native-module)。
+
+
 ## 当前功能与平台边界
 
-core 提供前台单次定位、时效/精度过滤与取消；无地图或CMP UI，location-kuikly仅OHOS桥，A/i由宿主两套UI复用原生实现。
+core 提供前台单次定位、时效/精度过滤与取消；无地图或CMP UI，location-kuikly提供三端调用侧与 Android/iOS receiver。
 
-适用版本：Maven 0.1.5；HAR 0.1.4。本次修复与平台边界见[功能与平台差异](docs/功能与平台差异.md)，构建与渠道验收见[版本发布记录](https://github.com/gycrosskit/location/releases/tag/0.1.5)；下方旧版本记录保留其历史范围。
+历史发布基线：Maven 0.1.5；HAR 0.1.4。本次修复与平台边界见[功能与平台差异](docs/功能与平台差异.md)，构建与渠道验收见[版本发布记录](https://github.com/gycrosskit/location/releases/tag/0.1.5)；下方旧版本记录保留其历史范围。
 
 当前测试覆盖、执行时点和未验收项集中见[验证范围](docs/功能与平台差异.md#验证范围)，复现命令见[开发与验证](docs/开发与验证.md)。
 
@@ -22,7 +25,7 @@ core 提供前台单次定位、时效/精度过滤与取消；无地图或CMP U
 | iOS | KMP `location-core`，`CoreLocation` | iOS 14+（使用实例 `authorizationStatus` API） |
 | HarmonyOS | 原生 `location-native` HAR，`geoLocationManager` | 当前 HAR 的 target/compatible SDK 均为 API 22 |
 
-KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。`location-kuikly` 提供 OHOS 桥，core 的 `ohosArm64` 变体只含公共 API。不提供 Swift Package；JVM 变体只含公共 API/数据与测试逻辑，无 JVM 定位实现。
+KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。`location-kuikly` 提供三端调用侧与 Android/iOS receiver，core 的 `ohosArm64` 变体只含公共 API。不提供 Swift Package；JVM 变体只含公共 API/数据与测试逻辑，无 JVM 定位实现。
 
 ## 架构与调用流程
 
@@ -34,6 +37,10 @@ flowchart TB
     Core --> Android[AndroidLocationClient<br/>LocationManager]
     Core --> IOS[IosLocationClient<br/>CoreLocation]
     Core --> Module[location-kuikly<br/>LocationModule]
+    Module --> AndroidReceiver[Android Kuikly receiver]
+    AndroidReceiver --> Android
+    Module --> IosReceiver[iOS Kuikly receiver]
+    IosReceiver --> IOS
     Module --> Native[HAR<br/>GycLocationModule]
     Host --> Client[HAR<br/>LocationClient]
     Native --> Client

@@ -51,7 +51,7 @@ class LocationModuleDeadlineTest {
         val result = async { module.currentLocation(LocationOptions(timeoutMillis = 30_000)) }
         runCurrent(); advanceTimeBy(12_001); runCurrent()
         assertFalse(result.isCompleted)
-        assertTrue(module.calls.single().second.contains("timeoutMillis=30000"))
+        assertTrue(module.calls.single().second.contains("\"timeoutMillis\":30000"))
         module.response(JSONObject().apply { put("status", "timed_out") })
         assertEquals(LocationResult.TimedOut, result.await())
     }

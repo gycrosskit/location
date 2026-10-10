@@ -98,6 +98,7 @@ jobs:
         timeout-minutes: 10
         run: |
           python3 scripts/ci-run.py --log ci-diagnostics/fork-host-fixture.log -- python3 verification/ci/test_fork_host.py
+          python3 scripts/ci-run.py --log ci-diagnostics/module-gate-fixture.log -- python3 verification/ci/test_module_check.py
           python3 scripts/ci-run.py --log ci-diagnostics/contracts-1.log -- python3 scripts/test-check-maven.py
           python3 scripts/ci-run.py --log ci-diagnostics/contracts-2.log -- python3 scripts/test-jitpack-metadata.py
           TYPESCRIPT_PATH="$RUNNER_TEMP/ci-tools/node_modules/typescript" python3 scripts/ci-run.py --log ci-diagnostics/contracts-4.log -- node --test ohos/tests/location.test.cjs tests/kuikly-module.cjs

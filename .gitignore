@@ -6,3 +6,6 @@ local.properties
 **/.hvigor/
 .DS_Store
 **/BuildProfile.ets
+/scripts/ci-changes.py
+/scripts/ci-run.py
+/scripts/ci-native-cache.py

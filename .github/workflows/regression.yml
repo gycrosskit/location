@@ -7,6 +7,10 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
+      cold_gradle_cache:
+        description: Skip Gradle Home restore for a controlled main cold measurement
+        type: boolean
+        default: false
       warm_native_cache:
         description: Warm Native toolchains on main only (leave version empty)
         type: boolean
@@ -132,6 +136,7 @@ jobs:
         if: needs.changes.outputs.source == 'true'
         with:
           cache-read-only: ${{ github.event_name == 'pull_request' }}
+          cache-write-only: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.cold_gradle_cache }}
       - run: test -f "$ANDROID_HOME/platforms/android-36/android.jar"
         timeout-minutes: 5
       - run: bash scripts/ci-pin-fork-host.sh
@@ -187,6 +192,7 @@ jobs:
         if: needs.changes.outputs.source == 'true'
         with:
           cache-read-only: ${{ github.event_name == 'pull_request' }}
+          cache-write-only: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.cold_gradle_cache }}
       - run: bash scripts/ci-pin-fork-host.sh
         if: (needs.changes.outputs.source == 'true') || (github.event_name == 'workflow_dispatch' && inputs.warm_native_cache && github.ref == 'refs/heads/main')
         timeout-minutes: 5

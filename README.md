@@ -5,7 +5,7 @@
 
 ## 当前功能与平台边界
 
-core 提供前台单次定位、时效/精度过滤与取消；无地图或CMP UI，location-kuikly提供三端调用侧与 Android/iOS receiver。
+core 提供前台单次定位、时效/精度过滤与取消；不提供地图或页面 UI，location-kuikly提供三端调用侧与 Android/iOS receiver。
 
 历史发布基线：Maven 0.1.5；HAR 0.1.4。本次修复与平台边界见[功能与平台差异](docs/功能与平台差异.md)，构建与渠道验收见[版本发布记录](https://github.com/gycrosskit/location/releases/tag/0.1.5)；下方旧版本记录保留其历史范围。
 

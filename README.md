@@ -1,6 +1,10 @@
 # GY CrossKit Location
 
-本版源码 Maven `0.1.6` 提供 `location-kuikly` Android、iosArm64、iosX64、iosSimulatorArm64 targets、原生 receiver 和每 Renderer handler。iOS 可选 Pod `GycLocationKuikly/Kuikly` `0.1.6` 使用真实 `OpenKuiklyIOSRender 2.28.0`；Kotlin handler 由宿主已有 Shared framework 导出。发布与远程消费状态以[对应 Release](https://github.com/gycrosskit/location/releases/tag/0.1.6)为准。历史基线 Maven `0.1.5` 的 `-kuikly` 仅含 OHOS 变体；原 HAR 沿用。宿主需注册并维护已有原生能力 owner，示例见[接入指南](docs/接入指南.md#androidios-kuikly-native-module)。
+> 当前源码候选统一为 **1.0.0**：Maven（core/Kuikly）、iOS Pod 与 OHPM 使用同版；尚未发布，示例坐标须待发布后远程消费。本地验证使用显式源码/本地 HAR，Kuikly 基线为 2.29.1，真机与新版本远程消费另验。
+
+当前源码为未发布的 Kuikly 2.29.1 配套候选；带发布标签的说明保留历史范围。新增 API 必须消费配套源码，不能用旧远程版本验证代替。
+
+已发布基线 Maven `0.1.6` 提供 `location-kuikly` Android、iosArm64、iosX64、iosSimulatorArm64 targets、原生 receiver 和每 Renderer handler。iOS 可选 Pod `GycLocationKuikly/Kuikly` `0.1.6` 使用真实 `OpenKuiklyIOSRender 2.28.0`；Kotlin handler 由宿主已有 Shared framework 导出。发布与远程消费状态以[对应 Release](https://github.com/gycrosskit/location/releases/tag/0.1.6)为准。历史基线 Maven `0.1.5` 的 `-kuikly` 仅含 OHOS 变体；原 HAR 沿用。宿主需注册并维护已有原生能力 owner，示例见[接入指南](docs/接入指南.md#androidios-kuikly-native-module)。
 
 
 ## 当前功能与平台边界
@@ -114,17 +118,17 @@ dependencyResolutionManagement {
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.gycrosskit.location:location-core:0.1.5")
+    implementation("com.github.gycrosskit.location:location-core:1.0.0")
 }
 ohosArm64Main.dependencies {
-    implementation("com.github.gycrosskit.location:location-kuikly:0.1.5")
+    implementation("com.github.gycrosskit.location:location-kuikly:1.0.0")
 }
 ```
 
 HarmonyOS 原生包独立安装，候选正式可查询后执行；发布接受与 Registry 可安装分别核验：
 
 ```sh
-ohpm install @gycrosskit/location-native@0.1.4
+ohpm install @gycrosskit/location-native@1.0.0
 ```
 
 ## 最小使用

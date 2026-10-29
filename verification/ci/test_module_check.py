@@ -1,6 +1,7 @@
 """Exercise the real shell gate with delayed app records and SDK command fixtures."""
 import json
 import os
+import plistlib
 from pathlib import Path
 import subprocess
 import sys
@@ -77,6 +78,13 @@ elif args and args[0] == '--sdk':
         started = time.monotonic()
         result = subprocess.run(['bash', str(root / 'scripts/verify-kuikly-module.sh'), str(products)],
                                 env=dict(environment, FIXTURE_MODE=mode), capture_output=True, text=True, timeout=10)
+        info = plistlib.loads((root / 'build/kuikly-module-check/ModuleCheck.app/Info.plist').read_bytes())
+        scene = info['UIApplicationSceneManifest']
+        assert scene['UIApplicationSupportsMultipleScenes'] is False
+        delegate = scene['UISceneConfigurations']['UIWindowSceneSessionRoleApplication'][0]['UISceneDelegateClassName']
+        swift = (ROOT / 'iosApp/KuiklyTests/ModuleLifecycleCheck.swift').read_text()
+        assert delegate == 'GYCNativeCheckScene' and '@objc(' + delegate + ')' in swift
+        assert 'UIWindow(windowScene: windowScene)' in swift
         assert (result.returncode == 0) == expected, (mode, result.stdout, result.stderr)
         receipt = json.loads((root / 'ci-diagnostics/module-check/launch.json').read_text())
         assert receipt['fixture_state'] == state, (mode, receipt)

@@ -1,21 +1,16 @@
 # GY CrossKit Location
 
-> 本轮是基于既有 **1.0.0** 的未发布改动，新版本号待验证后冻结；下方 `1.0.0` 坐标不包含本轮修复和新增能力。源码消费、各渠道产物与真机行为分别验证。
+> 当前 Maven 候选 **1.0.1** 尚未发布；下方 Maven 坐标须在发布并通过公开消费后使用。既有 `1.0.0` 不包含本轮改动，源码、公开消费与真机验收分别记录。
 
 当前源码配套 Kuikly 2.29.1；历史 Tag 与验收记录保持原范围。新增 API 必须消费本轮配套源码，不能用旧远程版本代替验证。
 
-已发布基线 Maven `0.1.6` 提供 `location-kuikly` Android、iosArm64、iosX64、iosSimulatorArm64 targets、原生 receiver 和每 Renderer handler。iOS 可选 Pod `GycLocationKuikly/Kuikly` `0.1.6` 使用真实 `OpenKuiklyIOSRender 2.28.0`；Kotlin handler 由宿主已有 Shared framework 导出。发布与远程消费状态以[对应 Release](https://github.com/gycrosskit/location/releases/tag/0.1.6)为准。历史基线 Maven `0.1.5` 的 `-kuikly` 仅含 OHOS 变体；原 HAR 沿用。宿主需注册并维护已有原生能力 owner，示例见[接入指南](docs/接入指南.md#androidios-kuikly-native-module)。
-
+本轮配套：iOS Git Pod 与 HarmonyOS HAR 均沿用 `1.0.0`（原生源码未变），不为空发版；Git Pod 不代表 CocoaPods Specs 发布。既有 [Maven 1.0.0](https://github.com/gycrosskit/location/releases/tag/1.0.0) 与 [HAR 1.0.0](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 保留原 Tag 和字节；OHPM Registry 是否可安装须独立核验。
 
 ## 当前功能与平台边界
 
 core 提供前台单次定位、时效/精度过滤与取消；不提供地图或页面 UI，location-kuikly提供三端调用侧与 Android/iOS receiver。
 
-历史发布基线：Maven 0.1.5；HAR 0.1.4。本次修复与平台边界见[功能与平台差异](docs/功能与平台差异.md)，构建与渠道验收见[版本发布记录](https://github.com/gycrosskit/location/releases/tag/0.1.5)；下方旧版本记录保留其历史范围。
-
 当前测试覆盖、执行时点和未验收项集中见[验证范围](docs/功能与平台差异.md#验证范围)，复现命令见[开发与验证](docs/开发与验证.md)。
-
-此版本包含已复核的跨端行为修复；[历史源码候选记录](docs/跨端行为候选.md)和下方旧版验收保持其原时点，当前范围见顶部功能与平台差异。
 
 [历史完整源码审查](docs/完整源码审查.md) 列出全部生产文件、公开调用链、实际验证与未测项。
 
@@ -104,6 +99,8 @@ classDiagram
 
 ## 安装
 
+以下 Maven 示例针对本轮候选；公开发布与精确版本消费通过前，不视为可用的远程坐标。
+
 ```kotlin
 // settings.gradle.kts
 dependencyResolutionManagement {
@@ -118,14 +115,14 @@ dependencyResolutionManagement {
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.gycrosskit.location:location-core:1.0.0")
+    implementation("com.github.gycrosskit.location:location-core:1.0.1")
 }
 ohosArm64Main.dependencies {
-    implementation("com.github.gycrosskit.location:location-kuikly:1.0.0")
+    implementation("com.github.gycrosskit.location:location-kuikly:1.0.1")
 }
 ```
 
-HarmonyOS 原生包独立安装，候选正式可查询后执行；发布接受与 Registry 可安装分别核验：
+HarmonyOS 原生包独立安装，沿用 `1.0.0`；[固定 Release HAR](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 与 Registry 可安装性分别核验，下方命令须以精确 Registry 查询/安装结果为准：
 
 ```sh
 ohpm install @gycrosskit/location-native@1.0.0

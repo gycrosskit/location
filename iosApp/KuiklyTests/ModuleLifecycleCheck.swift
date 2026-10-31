@@ -165,9 +165,21 @@ private func checks() async {
 }
 
 @main
-private final class CheckApp: UIResponder, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions options: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        trace("STAGE: didFinishLaunching pid=\(getpid())")
+private final class CheckApp: UIResponder, UIApplicationDelegate {}
+
+// UIKit requires a connected Scene before these native behavior checks run.
+@objc(GYCNativeCheckScene)
+private final class CheckScene: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = scene as? UIWindowScene else {
+            preconditionFailure("Native check requires an iPhone Window Scene")
+        }
+        let window = UIWindow(windowScene: windowScene)
+        self.window = window
+        window.rootViewController = UIViewController()
+        window.makeKeyAndVisible()
+        trace("STAGE: Scene connected pid=\(getpid())")
         // 独立 worker deadline 也能诊断 Main/Context 被阻塞的 fixture。
         DispatchQueue.global().asyncAfter(deadline: .now() + 60) {
             trace("FAIL: lifecycle fixture exceeded 60 seconds")
@@ -179,6 +191,5 @@ private final class CheckApp: UIResponder, UIApplicationDelegate {
             trace("COMPLETE: exit=0")
             exit(0)
         }
-        return true
     }
 }

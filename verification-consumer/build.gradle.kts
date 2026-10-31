@@ -2,7 +2,7 @@ plugins {
     kotlin("multiplatform") version "2.2.21-1.0.0"
     id("com.android.library") version "8.10.1"
 }
-val locationVersion = providers.gradleProperty("locationVersion").orElse("1.0.0").get()
+val locationVersion = providers.gradleProperty("locationVersion").orElse("1.0.1").get()
 val verifyKuiklyNative = locationVersion !in setOf("0.1.0", "0.1.1", "0.1.2", "0.1.3", "0.1.4", "0.1.5")
 val kuiklyRenderFrameworkDir = providers.gradleProperty("kuiklyRenderFrameworkDir").orNull
 kotlin {

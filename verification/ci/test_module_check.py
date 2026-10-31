@@ -1,6 +1,7 @@
 """Exercise the real shell gate with delayed app records and SDK command fixtures."""
 import json
 import os
+import plistlib
 from pathlib import Path
 import subprocess
 import sys
@@ -14,10 +15,11 @@ with TemporaryDirectory() as directory:
     root = Path(directory)
     (root / 'scripts').mkdir()
     source = (ROOT / 'scripts/verify-kuikly-module.sh').read_text()
-    # Only shorten the production deadlines and redirect crash folders into this fixture.
+    # Keep room for child-process startup; failure cases still have a bounded app wait.
     assert source.count('timeout=90') == source.count('deadline = time.monotonic() + 90') == 1
-    source = source.replace('timeout=90', 'timeout=1').replace('deadline = time.monotonic() + 90', 'deadline = time.monotonic() + 1')
+    source = source.replace('timeout=90', 'timeout=1').replace('deadline = time.monotonic() + 90', 'deadline = time.monotonic() + 5')
     source = source.replace('$HOME/Library', '$FIXTURE_HOME/Library')
+    assert '$HOME/Library' not in source
     (root / 'scripts/verify-kuikly-module.sh').write_text(source)
     products = root / 'Products'
     for name in ('GycLocationKuikly', 'OpenKuiklyIOSRender'):
@@ -41,7 +43,7 @@ elif args[:2] == ['simctl', 'launch']:
     report.write_text('fixture crash diagnostics')
     payload = os.environ['FIXTURE_PASS'] + 'COMPLETE: exit=0\\n'
     if mode == 'delayed':
-        subprocess.Popen([sys.executable, '-c', 'import sys,time;from pathlib import Path;time.sleep(0.2);Path(sys.argv[1]).write_text(sys.argv[2])', str(result), payload], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.Popen([sys.executable, '-c', 'import sys,time;from pathlib import Path;time.sleep(1.2);Path(sys.argv[1]).write_text(sys.argv[2])', str(result), payload], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     elif mode == 'failed':
         result.write_text('STAGE: Context drain requested\\nFAIL: fixture failure\\n')
     elif mode == 'incomplete':
@@ -77,15 +79,23 @@ elif args and args[0] == '--sdk':
         started = time.monotonic()
         result = subprocess.run(['bash', str(root / 'scripts/verify-kuikly-module.sh'), str(products)],
                                 env=dict(environment, FIXTURE_MODE=mode), capture_output=True, text=True, timeout=10)
+        info = plistlib.loads((root / 'build/kuikly-module-check/ModuleCheck.app/Info.plist').read_bytes())
+        scene = info['UIApplicationSceneManifest']
+        assert scene['UIApplicationSupportsMultipleScenes'] is False
+        delegate = scene['UISceneConfigurations']['UIWindowSceneSessionRoleApplication'][0]['UISceneDelegateClassName']
+        swift = (ROOT / 'iosApp/KuiklyTests/ModuleLifecycleCheck.swift').read_text()
+        assert delegate == 'GYCNativeCheckScene' and '@objc(' + delegate + ')' in swift
+        assert 'UIWindow(windowScene: windowScene)' in swift
         assert (result.returncode == 0) == expected, (mode, result.stdout, result.stderr)
         receipt = json.loads((root / 'ci-diagnostics/module-check/launch.json').read_text())
         assert receipt['fixture_state'] == state, (mode, receipt)
         assert receipt['pid'] == 4242
         if mode == 'delayed':
-            assert time.monotonic() - started >= 0.2, 'launch returning 0 must not end the app wait'
+            assert time.monotonic() - started >= 1.2, 'launch returning 0 must not end the app wait'
         if not expected:
             assert (root / 'ci-diagnostics/module-check/unified.log').is_file()
-            assert list((root / 'ci-diagnostics/module-check').glob('*ModuleCheck*.txt'))
+            reports = list((root / 'ci-diagnostics/module-check').glob('*ModuleCheck*.txt'))
+            assert len(reports) == 1 and reports[0].read_text() == 'fixture crash diagnostics'
         if mode == 'timeout':
             assert receipt['simctl_returncode'] == 124 and receipt['timed_out']
         if mode == 'nonzero':

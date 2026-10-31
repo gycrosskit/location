@@ -207,4 +207,4 @@ OHOS KLIB 编译不代表 HAR 构建、ohpm 上架或真机验收。HAR 通过�
 
 阶段、缓存、有限网络重试、失败记录与证据边界见[共用 CI 规则](https://github.com/gycrosskit/.github/blob/main/docs/持续集成门禁.md)；本库实际平台命令以 Jenkins 的固定版本 recipe 为准。源码通过、远程消费、HAR/ohpm 与设备验收分别记录。
 
-已发布 `0.1.3` 的 iOS KLIB 引用了 SDK 26 的 `_LocationEssentials`，独立 Framework 链接需要 Xcode 26/iOS SDK 26；`release-native` 明确选择 runner 已安装的 Xcode 26.0.1 并打印版本/SDK 清单。该构建 SDK 门槛不提高组件现有 iOS 14+ 的 deployment target，也不新增系统 API。
+历史 `0.1.3` 的 iOS KLIB 引用了 SDK 26 的 `_LocationEssentials`。当前源码与发布消费者统一以 Xcode/iOS SDK 27.1 编译，仍实查该框架，Simulator 验收采用共用 CI 的 runtime 27.0 基线；不绑定某台机器的 Xcode 安装路径。该构建 SDK 变更不提高组件现有 iOS 14+ 的 deployment target，也不新增系统 API。此处配置已调整，真实 SDK 验收结果仍以本轮准确 SHA 的回执为准。

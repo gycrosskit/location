@@ -1,13 +1,13 @@
 # @gycrosskit/location-native
 
-> 当前原生 HAR 保持 **1.0.0**，与 Maven 候选 `1.0.1` 配套；本轮仅修改 Android 定位实现，HAR 源码未变，不重新发布同一版本。
+> iOS Git Pod `1.0.1`（`native-1.0.1`），HAR/OHPM `1.0.1`（`har-1.0.1`）；Maven 保留 `1.0.1`。发布与精确消费状态见对应 Release；旧 Tag、归档及摘要不变。
 
 固定 [HAR 1.0.0 Release](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 保留原字节；以下 Registry 命令须独立核验精确版本是否可安装，Release 附件不代表 Registry 已上架。
 
 前台单次定位，支持超时、精度/时效过滤及取消。当前 HAR target/compatible SDK 为 HarmonyOS API 22。
 
 ```sh
-ohpm install @gycrosskit/location-native@1.0.0
+ohpm install @gycrosskit/location-native@1.0.1
 ```
 
 ```typescript

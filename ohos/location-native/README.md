@@ -1,13 +1,15 @@
 # @gycrosskit/location-native
 
-> iOS Git Pod `1.0.1`（`native-1.0.1`），HAR/OHPM `1.0.1`（`har-1.0.1`）；Maven 保留 `1.0.1`。发布与精确消费状态见对应 Release；旧 Tag、归档及摘要不变。
+> 当前版本 `1.0.2`：Maven/JitPack、Git Pod `native-1.0.2`、GitHub HAR `har-1.0.2` 与私 OHPM 已发布。Maven/Git Pod 消费编译及私 OHPM 的精确安装、锁文件和字节校验已通过；设备行为见验证范围。
 
 固定 [HAR 1.0.0 Release](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 保留原字节；以下 Registry 命令须独立核验精确版本是否可安装，Release 附件不代表 Registry 已上架。
 
 前台单次定位，支持超时、精度/时效过滤及取消。当前 HAR target/compatible SDK 为 HarmonyOS API 22。
 
+先使用调用方现有的私仓只读 scope 配置，再安装精确版本：
+
 ```sh
-ohpm install @gycrosskit/location-native@1.0.1
+ohpm install @gycrosskit/location-native@1.0.2
 ```
 
 ```typescript
@@ -19,7 +21,7 @@ const result = await request.result;
 request.cancel();
 ```
 
-宿主提前声明/申请 APPROXIMATELY_LOCATION，精确定位另加 LOCATION。结果状态为 available/permission_missing/service_disabled/timed_out/unavailable/cancelled；仅内存缓存，每次检查授权和服务；`useCachedLocation` 默认开启缓存，设为 `false` 时跳过实例及系统缓存；缓存须符合 `maxAgeMillis` 和精度，新监听回调检查坐标、精度及非负、非未来时间戳，不受缓存年龄限制。此行为为本地源码变更，尚待发布。不提供后台定位、坐标转换、地址查询。原生导出 GycLocationModule，0.1.1 配合独立 Maven location-kuikly；Maven 不自动携带 HAR。
+宿主提前声明/申请 APPROXIMATELY_LOCATION，精确定位另加 LOCATION。结果状态为 available/permission_missing/service_disabled/timed_out/unavailable/cancelled；仅内存缓存，每次检查授权和服务；`useCachedLocation` 默认开启缓存，设为 `false` 时跳过实例及系统缓存；缓存须符合 `maxAgeMillis` 和精度，新监听回调检查坐标、精度及非负、非未来时间戳，不受缓存年龄限制。不提供后台定位、坐标转换、地址查询。原生导出 GycLocationModule，配合独立 Maven location-kuikly；Maven 不自动携带 HAR。
 
 [完整接入指南](https://github.com/gycrosskit/location/blob/main/docs/接入指南.md) · [开发与验证](https://github.com/gycrosskit/location/blob/main/docs/开发与验证.md) · [版本](https://github.com/gycrosskit/location/releases) · [问题反馈](https://github.com/gycrosskit/location/issues)。
 

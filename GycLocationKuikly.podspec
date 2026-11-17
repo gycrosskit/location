@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name = 'GycLocationKuikly'
-  spec.version = '1.0.2'
+  spec.version = '1.0.3'
   spec.summary = 'GY CrossKit location Kuikly native receiver.'
   spec.homepage = 'https://github.com/gycrosskit/location'
   spec.license = { :type => 'Apache-2.0', :file => 'LICENSE' }

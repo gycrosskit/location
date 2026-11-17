@@ -35,4 +35,4 @@ if [[ "$platform" == maven ]]; then exec bash scripts/package-maven.sh "$@"; fi
 module=LocationNative
 cd ohos
 if [[ "${HARMONY_DEPENDENCIES_READY:-false}" != true ]]; then "${HARMONY_OHPM:-ohpm}" install --all; fi
-exec bash "${HARMONY_HVIGOR:-hvigorw}" --mode module -p "module=$module@default" -p product=default -p buildMode=release assembleHar --no-daemon
+exec bash "${HARMONY_HVIGOR:-$(command -v hvigorw)}" --mode module -p "module=$module@default" -p product=default -p buildMode=release assembleHar --no-daemon

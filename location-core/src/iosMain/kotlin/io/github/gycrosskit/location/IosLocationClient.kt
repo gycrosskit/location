@@ -29,7 +29,7 @@ class IosLocationClient : LocationClient {
         // 每次请求独占 manager/delegate，取消后的迟到回调不会恢复下一次请求。
         var delegate: Delegate? = null
         try {
-            manager.desiredAccuracy = options.maxAccuracyMeters.coerceAtLeast(1.0)
+            manager.desiredAccuracy = desiredAccuracy(options.maxAccuracyMeters, manager.accuracyAuthorization)
             withTimeoutOrNull(options.timeoutMillis) {
                 suspendCancellableCoroutine<LocationResult> { pending ->
                     delegate = Delegate(
@@ -72,6 +72,11 @@ class IosLocationClient : LocationClient {
         }
     }
 }
+
+/** 验收阈值可以不设上限，但 CoreLocation 会拒绝过大的请求精度。 */
+internal fun desiredAccuracy(maxAccuracyMeters: Double, authorization: CLAccuracyAuthorization): CLLocationAccuracy =
+    if (authorization == CLAccuracyAuthorization.CLAccuracyAuthorizationReducedAccuracy) kCLLocationAccuracyReduced
+    else maxAccuracyMeters.coerceIn(1.0, kCLLocationAccuracyThreeKilometers)
 
 /** 等待期间权限与服务可发生变化；受系统策略限制与用户拒绝均缺少定位授权。 */
 internal fun locationFailure(

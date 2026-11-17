@@ -23,7 +23,7 @@ class IosLocationClient : LocationClient {
             return@withContext LocationResult.PermissionMissing
         }
         if (!CLLocationManager.locationServicesEnabled()) return@withContext LocationResult.ServiceDisabled
-        manager.location?.toFix()?.takeIf { options.accepts(it, now()) }?.let {
+        if (options.useCachedLocation) manager.location?.toFix()?.takeIf { options.accepts(it, now()) }?.let {
             return@withContext LocationResult.Available(it)
         }
         // 每次请求独占 manager/delegate，取消后的迟到回调不会恢复下一次请求。
@@ -35,7 +35,7 @@ class IosLocationClient : LocationClient {
                     delegate = Delegate(
                         onLocation = { location ->
                             val fix = location.toFix()
-                            if (options.accepts(fix, now()) && pending.isActive) pending.resume(LocationResult.Available(fix))
+                            if (options.acceptsUpdate(fix, now()) && pending.isActive) pending.resume(LocationResult.Available(fix))
                         },
                         onFailure = { error ->
                             val failure = locationFailure(manager.authorizationStatus,

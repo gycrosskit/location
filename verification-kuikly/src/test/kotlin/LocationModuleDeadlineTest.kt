@@ -82,4 +82,22 @@ class LocationModuleDeadlineTest {
         module.response(JSONObject().apply { put("status", "timed_out") }); module.dispose(); runCurrent()
         assertFailsWith<CancellationException> { result.await() }
     }
+    @Test fun `native receipt is not rejected by cache age`() = runTest {
+        val module = LocationModule()
+        val result = async { module.currentLocation(LocationOptions(maxAgeMillis = 1_000, useCachedLocation = false)) }
+        runCurrent()
+        assertTrue(module.calls.single().second.contains("\"useCachedLocation\":false"))
+        val fix = LocationFix(30.0, 120.0, 20.0, System.currentTimeMillis() - 3_644)
+        module.response(JSONObject().apply {
+            put("status", "available")
+            put("latitude", fix.latitude)
+            put("longitude", fix.longitude)
+            put("accuracy", fix.accuracyMeters)
+            put("timestampMillis", fix.timestampMillis)
+        })
+        assertEquals(LocationResult.Available(fix), result.await())
+        assertEquals(1, module.removedCallbacks)
+        assertEquals(1, module.cancelled.size)
+    }
+
 }

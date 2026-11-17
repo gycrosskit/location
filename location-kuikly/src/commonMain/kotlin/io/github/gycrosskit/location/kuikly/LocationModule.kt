@@ -40,6 +40,7 @@ class LocationModule(private val bridgeTimeoutMillis: Long = 12_000L) : Module()
             put("timeoutMillis", options.timeoutMillis)
             put("maxAgeMillis", options.maxAgeMillis)
             put("maxAccuracyMeters", options.maxAccuracyMeters)
+            put("useCachedLocation", options.useCachedLocation)
         }
         val response = try {
             // 原生按请求 deadline 结算，桥接留回执余量；保留旧参数作为 watchdog 最短等待。
@@ -62,7 +63,7 @@ class LocationModule(private val bridgeTimeoutMillis: Long = 12_000L) : Module()
                 val fix = LocationFix(response.optDouble("latitude", Double.NaN),
                     response.optDouble("longitude", Double.NaN), response.optDouble("accuracy", Double.NaN),
                     response.optLong("timestampMillis", -1L))
-                if (options.accepts(fix, Clock.System.now().toEpochMilliseconds())) LocationResult.Available(fix)
+                if (options.acceptsUpdate(fix, Clock.System.now().toEpochMilliseconds())) LocationResult.Available(fix)
                 else LocationResult.Unavailable
             }
             else -> LocationResult.Unavailable

@@ -51,12 +51,30 @@ vm.runInNewContext(ts.transpileModule(source, {compilerOptions: {module: ts.Modu
   const options = new LocationOptions(); options.timeoutMillis = 10;
   assert.equal((await client.currentLocation(options).result).status, 'timed_out'); assert.equal(removes, 2);
   const pending = client.currentLocation();
-  listener({latitude: 30, longitude: 120, accuracy: 1, timeStamp: Date.now() - 400000});
   listener({latitude: 30, longitude: 120, accuracy: 501, timeStamp: Date.now()});
   assert.equal(removes, 2);
   listener({latitude: 30, longitude: 120, accuracy: 20, timeStamp: Date.now()});
   assert.equal((await pending.result).status, 'available'); assert.equal(removes, 3);
   assert.equal((await client.currentLocation().result).status, 'available'); assert.equal(removes, 3);
+  const freshOptions = new LocationOptions(); freshOptions.maxAgeMillis = 1000;
+  systemCache = {latitude: 30, longitude: 120, accuracy: 20, timeStamp: Date.now() - 3644};
+  const freshClient = new LocationClient();
+  const fresh = freshClient.currentLocation(freshOptions);
+  listener({latitude: 30, longitude: 120, accuracy: 20, timeStamp: Date.now() - 3644});
+  assert.equal((await fresh.result).status, 'available', 'new callback is not limited by cache age');
+  const again = freshClient.currentLocation(freshOptions);
+  again.cancel();
+  assert.equal((await again.result).status, 'cancelled', 'old instance and system caches are not reused');
+  systemCache = {latitude: 30, longitude: 120, accuracy: 20, timeStamp: Date.now()};
+  const noCache = new LocationOptions(); noCache.useCachedLocation = false;
+  const readsBefore = cacheReads;
+  for (let i = 0; i < 2; i++) {
+    const request = freshClient.currentLocation(noCache);
+    listener({latitude: 30, longitude: 120, accuracy: 20, timeStamp: Date.now()});
+    assert.equal((await request.result).status, 'available');
+  }
+  assert.equal(cacheReads, readsBefore, 'uncached requests each listen without reading system cache');
+  systemCache = undefined;
   const isolated = new LocationClient();
   const old = isolated.currentLocation(), oldListener = listener;
   old.cancel();
@@ -73,7 +91,7 @@ vm.runInNewContext(ts.transpileModule(source, {compilerOptions: {module: ts.Modu
   assert.equal((await replacement.result).status, 'cancelled');
   for (const [field, value] of [['timeoutMillis', 0], ['timeoutMillis', 2147483648],
     ['timeoutMillis', 1.5], ['maxAgeMillis', -1], ['maxAgeMillis', NaN],
-    ['maxAccuracyMeters', -1], ['maxAccuracyMeters', Infinity]]) {
+    ['maxAccuracyMeters', -1], ['maxAccuracyMeters', Infinity], ['useCachedLocation', 'false']]) {
     const bad = new LocationOptions(); bad[field] = value;
     assert.throws(() => client.currentLocation(bad), /Invalid location options/);
   }

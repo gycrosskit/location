@@ -38,7 +38,7 @@ class AndroidLocationClient(context: Context) : LocationClient {
                     context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED }
             val enabled = providers.filter { service.isProviderEnabled(it) }
             if (enabled.isEmpty()) return@withContext LocationResult.Unavailable
-            enabled.mapNotNull { service.getLastKnownLocation(it) }.map { it.toFix() }
+            if (options.useCachedLocation) enabled.mapNotNull { service.getLastKnownLocation(it) }.map { it.toFix() }
                 .filter { options.accepts(it, System.currentTimeMillis()) }
                 .minByOrNull { it.accuracyMeters }?.let { return@withContext LocationResult.Available(it) }
 
@@ -47,7 +47,7 @@ class AndroidLocationClient(context: Context) : LocationClient {
                     val listener = object : LocationListener {
                         override fun onLocationChanged(location: Location) {
                             val fix = location.toFix()
-                            if (options.accepts(fix, System.currentTimeMillis()) && pending.isActive) {
+                            if (options.acceptsUpdate(fix, System.currentTimeMillis()) && pending.isActive) {
                                 pending.resume(LocationResult.Available(fix))
                             }
                         }

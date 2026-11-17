@@ -2,15 +2,15 @@
 
 Kuikly 由宿主统一选择版本；组件构建基线、允许范围及消费验证边界见[功能与平台差异](docs/功能与平台差异.md#kuikly-版本与宿主选择)。
 
-> iOS Git Pod `1.0.1`（`native-1.0.1`），HAR/OHPM `1.0.1`（`har-1.0.1`）；Maven 保留 `1.0.1`。发布与精确消费状态见对应 Release；旧 Tag、归档及摘要不变。
+> 当前版本 `1.0.2`：Maven/JitPack、Git Pod `native-1.0.2`、GitHub HAR `har-1.0.2` 与私 OHPM 已发布。Maven/Git Pod 消费编译及私 OHPM 的精确安装、锁文件和字节校验已通过；设备行为见验证范围。
 
 组件构建最低基线为 Kuikly 2.29.1；允许范围、宿主选择及 2.30 消费边界见[功能与平台差异](docs/功能与平台差异.md#kuikly-版本与宿主选择)。历史 Tag 与验收记录保持原范围。
 
-本版 iOS Git Pod 与 HAR/OHPM 均为 `1.0.1`，Git Pod 使用 `native-1.0.1`，HAR 使用 `har-1.0.1`；Maven 保留 `1.0.1`。Git Pod 不代表 CocoaPods Specs 发布。既有 [Maven 1.0.0](https://github.com/gycrosskit/location/releases/tag/1.0.0) 与 [HAR 1.0.0](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 保留原 Tag 和字节；OHPM Registry 是否可安装须独立核验。
+本版 Maven 与 Git Pod/HAR 为 `1.0.2`；定位的私 OHPM 为 `@gycrosskit/location-native@1.0.2`，注册表可用性与 GitHub HAR 下载分别验收。Git Pod 不代表 CocoaPods Specs 发布。既有 [Maven 1.0.0](https://github.com/gycrosskit/location/releases/tag/1.0.0) 与 [HAR 1.0.0](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 保留原 Tag 和字节；OHPM Registry 是否可安装须独立核验。
 
 ## 当前功能与平台边界
 
-core 提供前台单次定位、时效/精度过滤与取消；不提供地图或页面 UI，location-kuikly提供三端调用侧与 Android/iOS receiver。
+core 提供前台单次定位、可选缓存、精度校验与取消；不提供地图或页面 UI，location-kuikly提供三端调用侧与 Android/iOS receiver。
 
 当前测试覆盖、执行时点和未验收项集中见[验证范围](docs/功能与平台差异.md#验证范围)，复现命令见[开发与验证](docs/开发与验证.md)。
 
@@ -48,13 +48,15 @@ flowchart TB
     Client --> System[geoLocationManager]
 ```
 
-Android 的单次请求先检查权限、服务和合格缓存；只有需要新位置时才注册监听。结束后释放监听，协程取消继续向上传播。iOS 与 HAR 使用各自系统监听及缓存来源，具体实现见源码。
+Android 的单次请求先检查权限和服务；仅在 `useCachedLocation=true` 时查询合格缓存，否则每次注册系统监听。结束后释放监听，协程取消继续向上传播。iOS 与 HAR 使用各自系统监听及缓存来源，具体实现见源码。
 
 ```mermaid
 flowchart TD
     Start[currentLocation / Android] --> Check{权限与可用 Provider 满足?}
     Check -->|否| Failure[返回 PermissionMissing / ServiceDisabled / Unavailable]
-    Check -->|是| Cache{系统缓存满足时效与精度?}
+    Check -->|是| AllowCache{允许缓存?}
+    AllowCache -->|是| Cache{系统缓存满足时效与精度?}
+    AllowCache -->|否| Listen
     Cache -->|是| Available[返回 Available]
     Cache -->|否| Listen[注册 GPS / 网络 Provider 监听]
     Listen --> Validate{收到合格位置?}
@@ -84,6 +86,7 @@ classDiagram
     class LocationOptions {
         +timeoutMillis Long
         +maxAgeMillis Long
+        +useCachedLocation Boolean
         +maxAccuracyMeters Double
         +accepts(fix, nowMillis) Boolean
     }
@@ -101,7 +104,7 @@ classDiagram
 
 ## 安装
 
-以下 Maven 示例针对本轮候选；公开发布与精确版本消费通过前，不视为可用的远程坐标。
+以下 Maven `1.0.2` 坐标已完成远程文件校验；宿主编译、设备行为与其他渠道仍分别验收。
 
 ```kotlin
 // settings.gradle.kts
@@ -117,17 +120,17 @@ dependencyResolutionManagement {
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.gycrosskit.location:location-core:1.0.1")
+    implementation("com.github.gycrosskit.location:location-core:1.0.2")
 }
 ohosArm64Main.dependencies {
-    implementation("com.github.gycrosskit.location:location-kuikly:1.0.1")
+    implementation("com.github.gycrosskit.location:location-kuikly:1.0.2")
 }
 ```
 
-HarmonyOS 原生包 `1.0.1` 独立安装；历史 [1.0.0 Release HAR](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 与 Registry 可安装性分别核验，下方命令须以精确 Registry 查询/安装结果为准：
+HarmonyOS 原生包目标 `1.0.2` 通过私仓独立安装；历史 [1.0.0 Release HAR](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 与 Registry 可安装性分别核验，下方命令须在调用方已配置私仓只读 scope 的会话中执行，并以精确 Registry 查询/安装结果为准：
 
 ```sh
-ohpm install @gycrosskit/location-native@1.0.1
+ohpm install @gycrosskit/location-native@1.0.2
 ```
 
 ## 最小使用
@@ -140,7 +143,7 @@ val client: LocationClient = AndroidLocationClient(context)
 // 先取得权限，再在页面生命周期绑定的协程中调用：
 val result = client.currentLocation(LocationOptions(
     timeoutMillis = 12_000,
-    maxAgeMillis = 300_000,
+    useCachedLocation = false,
     maxAccuracyMeters = 100.0,
 ))
 when (result) {
@@ -163,9 +166,9 @@ iOS 等待定位期间授权改为 `Restricted` 与 `Denied` 均返回 `Permissi
 
 Android 声明并取得 `ACCESS_COARSE_LOCATION` / `ACCESS_FINE_LOCATION`；iOS 填写 `NSLocationWhenInUseUsageDescription` 并提前授权；HarmonyOS 申请 `ohos.permission.APPROXIMATELY_LOCATION`，精确定位另加 `ohos.permission.LOCATION`。
 
-库不将粗略授权直接判失败，位置满足 `maxAccuracyMeters` 才返回成功；拒绝非法经纬度、未来/过期坐标和不合格精度。KMP 请求协程取消会清理独占系统监听，保留取消语义；完成和超时同样清理。iOS 平台操作内部切换主线程。Android 监听存在且授权允许的 GPS/网络 Provider，请求中启用的 Provider 也可投递；Android 11（API30）起粗略授权允许 GPS 的系统模糊化位置，API24–29 粗略授权仅使用网络。第一份合格位置才返回成功，Provider 切换不等于系统定位关闭。
+库不将粗略授权直接判失败，位置满足 `maxAccuracyMeters` 才返回成功；拒绝非法经纬度、未来时间戳和不合格精度；`useCachedLocation` 默认开启缓存，设为 `false` 时每次请求系统定位；`maxAgeMillis` 仅筛选缓存，新监听回调不按缓存年龄过滤。KMP 请求协程取消会清理独占系统监听，保留取消语义；完成和超时同样清理。iOS 平台操作内部切换主线程。Android 监听存在且授权允许的 GPS/网络 Provider，请求中启用的 Provider 也可投递；Android 11（API30）起粗略授权允许 GPS 的系统模糊化位置，API24–29 粗略授权仅使用网络。第一份合格位置才返回成功，Provider 切换不等于系统定位关闭。
 
-HarmonyOS 页面销毁时调用请求 `cancel()`；优先复用实例内的合格位置，否则读取系统上次位置；无历史位置或时效/精度不合格时等待新读数。每次读取重新检查权限、服务、时效和精度，不持久化位置。不提供后台或持续定位。GPS、室内/室外、权限和后台生命周期需真实设备验收。
+HarmonyOS 页面销毁时调用请求 `cancel()`；仅在 `useCachedLocation=true` 时依次检查实例缓存和系统上次位置的年龄。设为 false 时跳过两类缓存，直接监听系统定位；本次回调保留坐标、精度和时间合法性检查，不按缓存年龄过滤。不持久化位置。不提供后台或持续定位。GPS、室内/室外、权限和后台生命周期需真实设备验收。
 
 ## 文档与帮助
 
@@ -183,7 +186,7 @@ Apache-2.0，见 [LICENSE](LICENSE)。
 
 ```kotlin
 val location = io.github.gycrosskit.location.kuikly.LocationModule(bridgeTimeoutMillis = 12_000)
-val result = location.currentLocation(LocationOptions(timeoutMillis = 10_000, maxAgeMillis = 300_000, maxAccuracyMeters = 500.0))
+val result = location.currentLocation(LocationOptions(timeoutMillis = 10_000, maxAccuracyMeters = 500.0, useCachedLocation = false))
 // pageWillDestroy: location.dispose()
 ```
 

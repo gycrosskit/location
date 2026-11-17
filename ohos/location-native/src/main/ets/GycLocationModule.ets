@@ -6,6 +6,7 @@ interface RequestParams {
   timeoutMillis: number;
   maxAgeMillis: number;
   maxAccuracyMeters: number;
+  useCachedLocation?: boolean;
 }
 
 /** 单笔定位桥；旧取消回执不能终止后继请求。 */
@@ -38,6 +39,10 @@ export class GycLocationModule extends KuiklyRenderBaseModule {
       options.timeoutMillis = args.timeoutMillis;
       options.maxAgeMillis = args.maxAgeMillis;
       options.maxAccuracyMeters = args.maxAccuracyMeters;
+      if (args.useCachedLocation !== undefined) {
+        if (typeof args.useCachedLocation !== 'boolean') throw new Error('Invalid cache option');
+        options.useCachedLocation = args.useCachedLocation;
+      }
       const request = this.client.currentLocation(options);
       this.active = request;
       this.activeId = args.requestId;
@@ -46,10 +51,10 @@ export class GycLocationModule extends KuiklyRenderBaseModule {
         this.active = null;
         this.activeId = 0;
         const fix = result.fix;
-        callback?.(result.status === 'available' && fix ? {
+        callback?.(result.status === 'available' && fix && options.acceptsUpdate(fix) ? {
           status: result.status, latitude: fix.latitude, longitude: fix.longitude,
           accuracy: fix.accuracyMeters, timestampMillis: fix.timestampMillis
-        } : { status: result.status });
+        } : { status: result.status === 'available' ? 'unavailable' : result.status });
       }).catch(() => {
         if (this.destroyed || this.active !== request) return;
         this.active = null;

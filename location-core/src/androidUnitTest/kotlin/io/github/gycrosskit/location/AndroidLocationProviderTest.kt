@@ -60,13 +60,14 @@ class AndroidLocationProviderTest {
     }
 
     @Test fun coarseGpsOnlyFiltersCacheAndNewFixesByAccuracyAndTime() = runTest {
-        manager.setLastKnownLocation(LocationManager.GPS_PROVIDER, fix(accuracyMeters = 5_000f))
+        manager.setLastKnownLocation(LocationManager.GPS_PROVIDER, fix(timestamp = System.currentTimeMillis() - 1_001))
         val result = async { client.currentLocation(options()) }
         runCurrent()
         assertFalse(result.isCompleted)
         for (location in listOf(
             fix(accuracyMeters = 5_000f),
-            fix(timestamp = System.currentTimeMillis() - 10_000),
+            fix(timestamp = -1),
+            fix().apply { latitude = 91.0 },
             fix(timestamp = System.currentTimeMillis() + 10_000),
         )) {
             manager.simulateLocation(location)
@@ -74,7 +75,7 @@ class AndroidLocationProviderTest {
             runCurrent()
             assertFalse(result.isCompleted)
         }
-        val accepted = fix()
+        val accepted = fix(timestamp = System.currentTimeMillis() - 3_644)
         manager.simulateLocation(accepted)
         shadowOf(Looper.getMainLooper()).idle()
         runCurrent()
@@ -135,6 +136,22 @@ class AndroidLocationProviderTest {
         runCurrent()
         assertTrue(result.isCancelled)
         assertTrue(manager.getLocationUpdateListeners().isEmpty())
+    }
+
+    @Test fun bypassCacheRequestsSystemForEveryCallAndCleansListeners() = runTest {
+        manager.setLastKnownLocation(LocationManager.GPS_PROVIDER, fix())
+        repeat(2) {
+            val result = async { client.currentLocation(options().copy(useCachedLocation = false)) }
+            runCurrent()
+            assertFalse(result.isCompleted)
+            assertTrue(manager.getLocationUpdateListeners().isNotEmpty())
+            val accepted = fix(timestamp = System.currentTimeMillis() - 3_644)
+            manager.simulateLocation(accepted)
+            shadowOf(Looper.getMainLooper()).idle()
+            runCurrent()
+            assertEquals(LocationResult.Available(accepted.toFix()), result.await())
+            assertTrue(manager.getLocationUpdateListeners().isEmpty())
+        }
     }
 
     private fun options() = LocationOptions(timeoutMillis = 100, maxAgeMillis = 1_000, maxAccuracyMeters = 3_000.0)

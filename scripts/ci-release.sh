@@ -2,27 +2,12 @@
 set -euo pipefail
 : "${VERSION:?Provide an immutable release tag}"
 [[ "$VERSION" =~ ^[0-9][0-9A-Za-z._-]*$ ]] || { echo 'Invalid release tag' >&2; exit 1; }
-checksum="$(awk -v version="$VERSION" '$1 == version {print $2}' release-checksums.txt)"
-[[ "$checksum" =~ ^[a-f0-9]{64}$ ]] || { echo "No verified checksum for $VERSION" >&2; exit 1; }
 staging="$(mktemp -d)"
 trap 'rm -rf "$staging"' EXIT
-archive="$staging/location-maven.tar.gz"
-curl -fsSL --retry 3 --connect-timeout 30 --max-time 300 -o "$archive" "https://github.com/gycrosskit/location/releases/download/$VERSION/location-maven.tar.gz"
-echo "$checksum  $archive" | shasum -a 256 -c -
-python3 - "$archive" "$staging/maven" <<'EXTRACT'
-import sys, tarfile
-from pathlib import Path
-archive, destination = sys.argv[1:]
-root = Path(destination).resolve()
-with tarfile.open(archive) as bundle:
-    for item in bundle.getmembers():
-        assert item.isfile() or item.isdir(), f"Unexpected archive member: {item.name}"
-        assert (root / item.name).resolve().is_relative_to(root), item.name
-    bundle.extractall(root)
-EXTRACT
-python3 scripts/check-maven.py "$staging/maven" com.github.gycrosskit.location "$VERSION" location-core,location-kuikly ios_arm64,ios_x64,ios_simulator_arm64,ohos_arm64
-# 标签必须解析为不可变发布提交；不把当前 PR 的 SHA 当成已发布版本。
+# 远端准确 Tag 是发布身份锚，不以当前 PR HEAD 代替。
 commit="$(git ls-remote https://github.com/gycrosskit/location.git "refs/tags/$VERSION" "refs/tags/$VERSION^{}" | awk '$2 ~ /\^\{\}$/ {peeled=$1} $2 !~ /\^\{\}$/ {direct=$1} END {print peeled ? peeled : direct}')"
+python3 scripts/release-maven.py --version "$VERSION" --expected-sha "$commit" "$staging/maven"
+python3 scripts/check-maven.py "$staging/maven" com.github.gycrosskit.location "$VERSION" location-core,location-kuikly ios_arm64,ios_x64,ios_simulator_arm64,ohos_arm64
 publications=location-core,location-core-android,location-core-iosarm64,location-core-iosx64,location-core-iossimulatorarm64,location-core-ohosarm64,location-core-jvm,location-kuikly,location-kuikly-ohosarm64
 case "$VERSION" in
   0.1.[0-5]) ;;

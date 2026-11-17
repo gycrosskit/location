@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.0.2（待发布）
+
+- `useCachedLocation` 默认开启缓存，设为 `false` 时每次请求系统定位；`maxAgeMillis` 仅用于缓存；新系统监听回调不再按缓存年龄过滤，仍校验坐标、精度和时间戳。
+
 ## Native/HAR 1.0.1
 
 - iOS Git Pod 使用 `native-1.0.1`，HAR/OHPM 使用 `har-1.0.1`；Maven 保留 `1.0.1`，不重发未修改的 KMP 产物。

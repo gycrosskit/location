@@ -33,4 +33,18 @@ class LocationOptionsTest {
         assertFalse(options.accepts(fix.copy(longitude = 181.0), 1000))
         assertFailsWith<IllegalArgumentException> { LocationOptions(timeoutMillis = 0) }
     }
+
+    @Test fun cacheAgeDoesNotRejectCurrentRequestUpdates() {
+        val options = LocationOptions(maxAgeMillis = 1_000, maxAccuracyMeters = 20.0)
+        val fix = LocationFix(30.0, 120.0, 20.0, 9_000)
+        assertTrue(options.accepts(fix, 10_000))
+        assertFalse(options.accepts(fix.copy(timestampMillis = 8_999), 10_000))
+        assertTrue(options.acceptsUpdate(fix.copy(timestampMillis = 6_356), 10_000))
+        for (invalid in listOf(
+            fix.copy(latitude = 91.0), fix.copy(longitude = Double.NaN),
+            fix.copy(accuracyMeters = 20.1), fix.copy(accuracyMeters = -1.0),
+            fix.copy(timestampMillis = -1), fix.copy(timestampMillis = 10_001),
+        )) assertFalse(options.acceptsUpdate(invalid, 10_000))
+    }
+
 }

@@ -13,9 +13,11 @@ class LocationModuleHandlerTest {
     @Before fun setup() { Dispatchers.setMain(StandardTestDispatcher()) }
     @After fun cleanup() { Dispatchers.resetMain() }
     private class Client : LocationClient {
+        val options = mutableListOf<LocationOptions>()
         val waits = mutableListOf<CompletableDeferred<LocationResult>>()
         val cancelled = mutableListOf<Int>()
         override suspend fun currentLocation(options: LocationOptions): LocationResult {
+            this.options += options
             val index = waits.size
             val wait = CompletableDeferred<LocationResult>()
             waits += wait
@@ -73,4 +75,20 @@ class LocationModuleHandlerTest {
         assertTrue(client.waits.isEmpty())
         handler.dispose()
     }
+    @Test fun `cache option defaults true and accepts only booleans`() = runTest {
+        val client = Client()
+        val handler = LocationModuleHandler(client)
+        val replies = mutableListOf<String>()
+        handler.call("currentLocation", args(1), replies::add)
+        handler.call("currentLocation", args(2).dropLast(1) + ",\"useCachedLocation\":false}", replies::add)
+        for ((index, invalid) in listOf("0", "\"false\"", "null").withIndex()) {
+            handler.call("currentLocation", args(index + 3).dropLast(1) + ",\"useCachedLocation\":$invalid}", replies::add)
+        }
+        runCurrent()
+        assertEquals(listOf(true, false), client.options.map { it.useCachedLocation })
+        assertEquals(3, replies.size)
+        assertTrue(replies.all { JSONObject(it).optString("status") == "error" })
+        handler.dispose()
+    }
+
 }

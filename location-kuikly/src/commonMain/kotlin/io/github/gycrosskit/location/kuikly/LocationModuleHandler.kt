@@ -43,7 +43,9 @@ class LocationModuleHandler(private val client: LocationClient) {
                 val accuracy = args.opt("maxAccuracyMeters") as? Number ?: error("Missing accuracy")
                 require(timeout.toDouble() == timeout.toLong().toDouble())
                 require(age.toDouble().isFinite() && age.toDouble() == age.toLong().toDouble())
-                LocationOptions(timeout.toLong(), age.toLong(), accuracy.toDouble())
+                val cached = args.opt("useCachedLocation")
+                require(cached == null || cached is Boolean)
+                LocationOptions(timeout.toLong(), age.toLong(), accuracy.toDouble(), cached as? Boolean ?: true)
             } catch (_: Exception) {
                 callback("{\"status\":\"error\"}")
                 return@launch

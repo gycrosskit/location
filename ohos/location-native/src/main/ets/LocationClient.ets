@@ -10,6 +10,20 @@ export class LocationOptions {
   maxAgeMillis: number = 300000;
   /** 最大水平误差半径，米，有限且非负，默认 500。 */
   maxAccuracyMeters: number = 500;
+  /** 是否复用符合条件的缓存；false 时每次监听系统更新。 */
+  useCachedLocation: boolean = true;
+
+  acceptsUpdate(fix: LocationFix): boolean {
+    const age = Date.now() - fix.timestampMillis;
+    return Number.isFinite(fix.latitude) && fix.latitude >= -90 && fix.latitude <= 90 &&
+      Number.isFinite(fix.longitude) && fix.longitude >= -180 && fix.longitude <= 180 &&
+      Number.isFinite(fix.accuracyMeters) && fix.accuracyMeters >= 0 && fix.accuracyMeters <= this.maxAccuracyMeters &&
+      fix.timestampMillis >= 0 && Number.isFinite(age) && age >= 0;
+  }
+
+  accepts(fix: LocationFix): boolean {
+    return this.acceptsUpdate(fix) && Date.now() - fix.timestampMillis <= this.maxAgeMillis;
+  }
 }
 /** 系统原始读数，不做坐标系转换或地理编码。 */
 export interface LocationFix {
@@ -48,7 +62,7 @@ export class LocationClient {
    * @returns 宿主负责在离开页面时取消的独占请求。
    */
   currentLocation(options: LocationOptions = new LocationOptions()): LocationRequest {
-    if (!Number.isSafeInteger(options.timeoutMillis) || options.timeoutMillis <= 0 || options.timeoutMillis > 2147483647 ||
+    if (typeof options.useCachedLocation !== 'boolean' || !Number.isSafeInteger(options.timeoutMillis) || options.timeoutMillis <= 0 || options.timeoutMillis > 2147483647 ||
       !Number.isSafeInteger(options.maxAgeMillis) || options.maxAgeMillis < 0 ||
       !Number.isFinite(options.maxAccuracyMeters) || options.maxAccuracyMeters < 0) {
       throw new Error('Invalid location options');
@@ -73,7 +87,7 @@ export class LocationClient {
           latitude: location.latitude, longitude: location.longitude,
           accuracyMeters: location.accuracy, timestampMillis: location.timeStamp
         };
-        if (this.accepts(fix, options)) {
+        if (options.acceptsUpdate(fix)) {
           this.cached = fix;
           finish({ status: 'available', fix });
         }
@@ -84,14 +98,23 @@ export class LocationClient {
           finish({ status: 'permission_missing' }); return;
         }
         if (!geoLocationManager.isLocationEnabled()) { finish({ status: 'service_disabled' }); return; }
-        const cached = this.cached;
-        if (cached !== undefined && this.accepts(cached, options)) { finish({ status: 'available', fix: cached }); return; }
-        try {
-          listener(geoLocationManager.getLastLocation());
-          if (settled) { return; }
-        } catch (error) {
-          // 没有历史位置仍可等待新读数；权限、服务等错误沿用外层分类。
-          if ((error as BusinessError).code !== 3301200) { throw error as Error; }
+        if (options.useCachedLocation) {
+          const cached = this.cached;
+          if (cached !== undefined && options.accepts(cached)) { finish({ status: 'available', fix: cached }); return; }
+          try {
+            const location = geoLocationManager.getLastLocation();
+            const fix: LocationFix = {
+              latitude: location.latitude, longitude: location.longitude,
+              accuracyMeters: location.accuracy, timestampMillis: location.timeStamp
+            };
+            if (options.accepts(fix)) {
+              this.cached = fix;
+              finish({ status: 'available', fix }); return;
+            }
+          } catch (error) {
+            // 没有历史位置仍可等待新读数；权限、服务等错误沿用外层分类。
+            if ((error as BusinessError).code !== 3301200) { throw error as Error; }
+          }
         }
         timer = setTimeout(() => {
           try {
@@ -115,11 +138,4 @@ export class LocationClient {
     return { result, cancel };
   }
 
-  private accepts(fix: LocationFix, options: LocationOptions): boolean {
-    const age = Date.now() - fix.timestampMillis;
-    return Number.isFinite(fix.latitude) && fix.latitude >= -90 && fix.latitude <= 90 &&
-      Number.isFinite(fix.longitude) && fix.longitude >= -180 && fix.longitude <= 180 &&
-      Number.isFinite(fix.accuracyMeters) && fix.accuracyMeters >= 0 && fix.accuracyMeters <= options.maxAccuracyMeters &&
-      fix.timestampMillis >= 0 && Number.isFinite(age) && age >= 0 && age <= options.maxAgeMillis;
-  }
 }

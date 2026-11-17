@@ -7,6 +7,9 @@ from pathlib import Path
 import tarfile
 import tempfile
 import unittest
+from unittest.mock import patch
+import subprocess
+import sys
 
 spec = importlib.util.spec_from_file_location('release_maven', Path(__file__).with_name('release-maven.py'))
 release = importlib.util.module_from_spec(spec)
@@ -67,6 +70,43 @@ class ReleaseMavenTest(unittest.TestCase):
         self.archive.write_bytes(self.archive.read_bytes() + b'corrupt')
         with self.assertRaises(ValueError):
             release.verify(self.root, 'location', '1.0.2', SHA)
+
+    def test_registered_legacy_without_receipts_still_validates_and_extracts(self):
+        checksums = self.root / 'legacy.txt'
+        checksums.write_text('0.1.1 ' + hashlib.sha256(self.archive.read_bytes()).hexdigest() + '\n')
+        requested = []
+
+        def download(command, **kwargs):
+            target = Path(command[command.index('-o') + 1])
+            requested.append(target.name)
+            self.assertEqual('location-maven.tar.gz', target.name)
+            target.write_bytes(self.archive.read_bytes())
+
+        args = ['release-maven.py', '--version', '0.1.1', '--expected-sha', SHA,
+                '--allow-registered-legacy', str(self.root / 'legacy-output')]
+        with patch.object(release, 'LEGACY_CHECKSUMS', checksums), patch.object(sys, 'argv', args), \
+                patch.object(release.subprocess, 'run', side_effect=download):
+            release.main()
+        self.assertEqual(['location-maven.tar.gz'], requested)
+        self.assertEqual(b'published bytes', (self.root / 'legacy-output/com/example/file').read_bytes())
+
+    def test_new_version_cannot_fall_back_when_receipt_is_missing(self):
+        checksums = self.root / 'legacy.txt'
+        checksums.write_text('0.1.1 ' + '0' * 64 + '\n')
+
+        def download(command, **kwargs):
+            target = Path(command[command.index('-o') + 1])
+            if target.name != self.archive.name:
+                raise subprocess.CalledProcessError(22, command)
+            target.write_bytes(self.archive.read_bytes())
+
+        args = ['release-maven.py', '--version', '1.0.2', '--expected-sha', SHA,
+                '--allow-registered-legacy', str(self.root / 'modern-output')]
+        with patch.object(release, 'LEGACY_CHECKSUMS', checksums), patch.object(sys, 'argv', args), \
+                patch.object(release.subprocess, 'run', side_effect=download):
+            with self.assertRaises(subprocess.CalledProcessError):
+                release.main()
+        self.assertFalse((self.root / 'modern-output').exists())
 
     def test_unsafe_members_and_existing_destination_links_are_rejected(self):
         for name, kind in [('../outside', tarfile.REGTYPE), ('/absolute', tarfile.REGTYPE),

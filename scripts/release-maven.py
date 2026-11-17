@@ -24,6 +24,24 @@ def unique(pairs):
     return result
 
 
+LEGACY_CHECKSUMS = Path(__file__).resolve().parents[1] / 'release-checksums.txt'
+
+
+def registered_legacy_checksum(version):
+    matches = [line.split()[1:] for line in LEGACY_CHECKSUMS.read_text().splitlines()
+               if line.split() and line.split()[0] == version]
+    require(len(matches) <= 1 and all(len(row) == 1 and re.fullmatch('[0-9a-f]{64}', row[0]) for row in matches), '历史摘要登记无效')
+    return matches[0][0] if matches else None
+
+
+def archive_digest(path):
+    digest = hashlib.sha256()
+    with path.open('rb') as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def verify(directory, repository, version, sha):
     receipt = json.loads((directory / 'source-receipt.json').read_text(), object_pairs_hook=unique)
     require(receipt.get('repository') == {'identity': 'gycrosskit/' + repository, 'id': 1395496718}, '仓库身份不符')
@@ -36,11 +54,7 @@ def verify(directory, repository, version, sha):
             and isinstance(archive['sha256'], str) and re.fullmatch('[0-9a-f]{64}', archive['sha256']), '归档身份无效')
     require((directory / 'SHA256SUMS').read_bytes() == (archive['sha256'] + '  ' + name + '\n').encode(), '摘要文件不符')
     path = directory / name
-    digest = hashlib.sha256()
-    with path.open('rb') as source:
-        for chunk in iter(lambda: source.read(1024 * 1024), b''):
-            digest.update(chunk)
-    require(path.stat().st_size == archive['size'] and digest.hexdigest() == archive['sha256'], '归档字节不符')
+    require(path.stat().st_size == archive['size'] and archive_digest(path) == archive['sha256'], '归档字节不符')
     return path
 
 
@@ -76,17 +90,26 @@ def main():
     parser.add_argument('--repository', default='location', choices=['location'])
     parser.add_argument('--version', required=True)
     parser.add_argument('--expected-sha', required=True)
+    parser.add_argument('--allow-registered-legacy', action='store_true', help='仅验收已登记固定摘要的历史版本')
     parser.add_argument('destinations', type=Path, nargs='+')
     args = parser.parse_args()
     require(re.fullmatch('[0-9][0-9A-Za-z._-]*', args.version) and re.fullmatch('[0-9a-f]{40}', args.expected_sha), '版本或 SHA 无效')
     with tempfile.TemporaryDirectory() as temporary:
         directory = Path(temporary)
-        for name in [args.repository + '-maven.tar.gz', 'source-receipt.json', 'SHA256SUMS']:
+        legacy = registered_legacy_checksum(args.version) if args.allow_registered_legacy else None
+        names = [args.repository + '-maven.tar.gz']
+        if legacy is None:
+            names += ['source-receipt.json', 'SHA256SUMS']
+        for name in names:
             limit = 512 * 1024**2 if name.endswith('.tar.gz') else 1024**2
             subprocess.run(['curl', '-fsSL', '--retry', '3', '--connect-timeout', '30', '--max-time', '300',
                             '--max-filesize', str(limit), '-o', str(directory / name),
                             'https://github.com/gycrosskit/' + args.repository + '/releases/download/' + args.version + '/' + name], check=True)
-        archive = verify(directory, args.repository, args.version, args.expected_sha)
+        if legacy is None:
+            archive = verify(directory, args.repository, args.version, args.expected_sha)
+        else:
+            archive = directory / names[0]
+            require(archive_digest(archive) == legacy, '历史归档摘要不符')
         for destination in args.destinations:
             extract(archive, destination)
 

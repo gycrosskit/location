@@ -1,10 +1,10 @@
 # @gycrosskit/location-native
 
-> 当前版本 `1.0.2`：Maven/JitPack、Git Pod `native-1.0.2`、GitHub HAR `har-1.0.2` 与私 OHPM 已发布。Maven/Git Pod 消费编译及私 OHPM 的精确安装、锁文件和字节校验已通过；设备行为见验证范围。
+> 当前版本 `1.0.2`：Maven/JitPack、Git Pod `native-1.0.2`与私有 OHPM 已发布。Maven/Git Pod 消费编译及私 OHPM 的精确安装、锁文件和字节校验已通过；设备行为见验证范围。
 
 本模块 `1.0.3` 为本次发布候选，HarmonyOS 定位实现未变，发布与精确消费另行验收。
 
-固定 [HAR 1.0.0 Release](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 保留原字节；以下 Registry 命令须独立核验精确版本是否可安装，Release 附件不代表 Registry 已上架。
+下列命令使用私有 OHPM，须核验精确版本是否可安装。
 
 前台单次定位，支持超时、精度/时效过滤及取消。当前 HAR target/compatible SDK 为 HarmonyOS API 22。
 

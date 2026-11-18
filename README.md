@@ -1,12 +1,14 @@
 # GY CrossKit Location
 
+新版 Maven 发布由 Jenkins 生成同版本归档、`source-receipt.json` 和 `SHA256SUMS`。JitPack 核对标签来源、归档尺寸和摘要后安装同一份制品。历史发布按原版本 Tag 复验。
+
 Kuikly 由宿主统一选择版本；组件构建基线、允许范围及消费验证边界见[功能与平台差异](docs/功能与平台差异.md#kuikly-版本与宿主选择)。
 
-> 当前版本 `1.0.2`：Maven/JitPack、Git Pod `native-1.0.2`、GitHub HAR `har-1.0.2` 与私 OHPM 已发布。Maven/Git Pod 消费编译及私 OHPM 的精确安装、锁文件和字节校验已通过；设备行为见验证范围。
+> 当前版本 `1.0.2`：Maven/JitPack、Git Pod `native-1.0.2` 与私有 OHPM 已发布。Maven/Git Pod 消费编译及私 OHPM 的精确安装、锁文件和字节校验已通过；设备行为见验证范围。
 
 组件构建最低基线为 Kuikly 2.29.1；允许范围、宿主选择及 2.30 消费边界见[功能与平台差异](docs/功能与平台差异.md#kuikly-版本与宿主选择)。历史 Tag 与验收记录保持原范围。
 
-本版 Maven 与 Git Pod/HAR 为 `1.0.2`；定位的私 OHPM 为 `@gycrosskit/location-native@1.0.2`，注册表可用性与 GitHub HAR 下载分别验收。Git Pod 不代表 CocoaPods Specs 发布。既有 [Maven 1.0.0](https://github.com/gycrosskit/location/releases/tag/1.0.0) 与 [HAR 1.0.0](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 保留原 Tag 和字节；OHPM Registry 是否可安装须独立核验。
+本版 Maven 与 Git Pod 为 `1.0.2`，定位通过私有 OHPM 分发 `@gycrosskit/location-native@1.0.2`。Git Pod 不代表 CocoaPods Specs 发布。既有 [Maven 1.0.0](https://github.com/gycrosskit/location/releases/tag/1.0.0) 与 [HAR 1.0.0](https://github.com/gycrosskit/location/releases/tag/har-1.0.0) 保留原 Tag 和字节；OHPM Registry 是否可安装须独立核验。
 
 ## 当前功能与平台边界
 

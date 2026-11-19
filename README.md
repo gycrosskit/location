@@ -32,77 +32,9 @@ KMP 使用 Kotlin `2.2.21-1.0.0`、coroutines `1.10.2`。`location-kuikly` 提�
 
 ## 架构与调用流程
 
-`location-core` 统一单次定位参数与结果，权限由宿主提前取得。Android/iOS 使用各自系统定位实现；HarmonyOS 可直接使用 HAR，或经 `location-kuikly` 接线。JVM 只有公共 API，没有系统定位实现。
+`LocationClient` 统一单次定位契约，Android/iOS 使用系统定位，OHOS 经 HAR `LocationClient` 与 Kuikly `GycLocationModule` 接线。宿主负责前台授权和坐标业务处理，每个请求独立清理监听。
 
-```mermaid
-flowchart TB
-    Host[已授权宿主] --> Core[location-core<br/>LocationClient]
-    Core --> Android[AndroidLocationClient<br/>LocationManager]
-    Core --> IOS[IosLocationClient<br/>CoreLocation]
-    Core --> Module[location-kuikly<br/>LocationModule]
-    Module --> AndroidReceiver[Android Kuikly receiver]
-    AndroidReceiver --> Android
-    Module --> IosReceiver[iOS Kuikly receiver]
-    IosReceiver --> IOS
-    Module --> Native[HAR<br/>GycLocationModule]
-    Host --> Client[HAR<br/>LocationClient]
-    Native --> Client
-    Client --> System[geoLocationManager]
-```
-
-Android 的单次请求先检查权限和服务；仅在 `useCachedLocation=true` 时查询合格缓存，否则每次注册系统监听。结束后释放监听，协程取消继续向上传播。iOS 与 HAR 使用各自系统监听及缓存来源，具体实现见源码。
-
-```mermaid
-flowchart TD
-    Start[currentLocation / Android] --> Check{权限与可用 Provider 满足?}
-    Check -->|否| Failure[返回 PermissionMissing / ServiceDisabled / Unavailable]
-    Check -->|是| AllowCache{允许缓存?}
-    AllowCache -->|是| Cache{系统缓存满足时效与精度?}
-    AllowCache -->|否| Listen
-    Cache -->|是| Available[返回 Available]
-    Cache -->|否| Listen[注册 GPS / 网络 Provider 监听]
-    Listen --> Validate{收到合格位置?}
-    Validate -->|是| Cleanup[释放监听]
-    Cleanup --> Available
-    Validate -->|否| Wait[继续等待]
-    Wait --> Validate
-    Listen --> End[超时 / 服务关闭 / 失败 / 协程取消]
-    End --> Release[释放监听]
-    Release --> Result[返回对应结果；取消向上传播]
-```
-
-类图展示 KMP 契约；HarmonyOS ArkTS 的同名 `LocationClient` 是独立原生类，不是 Kotlin 接口的直接实现。
-
-```mermaid
-classDiagram
-    direction LR
-    class LocationClient {
-        <<interface>>
-        +currentLocation(options) LocationResult
-    }
-    class AndroidLocationClient
-    class IosLocationClient
-    class LocationModule {
-        +dispose()
-    }
-    class LocationOptions {
-        +timeoutMillis Long
-        +maxAgeMillis Long
-        +useCachedLocation Boolean
-        +maxAccuracyMeters Double
-        +accepts(fix, nowMillis) Boolean
-    }
-    class LocationResult {
-        <<interface>>
-    }
-    LocationClient <|.. AndroidLocationClient
-    LocationClient <|.. IosLocationClient
-    LocationClient <|.. LocationModule
-    LocationClient ..> LocationOptions : 输入
-    LocationClient ..> LocationResult : 返回
-```
-
-源码：[公共类型](location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt)、[Android 实现](location-core/src/androidMain/kotlin/io/github/gycrosskit/location/AndroidLocationClient.kt)、[iOS 实现](location-core/src/iosMain/kotlin/io/github/gycrosskit/location/IosLocationClient.kt)、[Kuikly Module](location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModule.kt)、[HAR Module](ohos/location-native/src/main/ets/GycLocationModule.ets)、[HAR Client](ohos/location-native/src/main/ets/LocationClient.ets)。Kuikly 的取消、超时和 `dispose()` 按 requestId 取消对应原生请求；回执后也会再次检查页面是否销毁。
+缓存、精度、取消与平台差异见[功能合同](docs/功能与平台差异.md)，注册示例见[接入指南](docs/接入指南.md)。源码职责和关系统一由 [AOCI 索引](aoci.txt)维护。
 
 ## 安装
 

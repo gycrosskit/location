@@ -1,0 +1,638 @@
+{
+  "version": 1,
+  "created_at": "2026-11-19T08:48:06Z",
+  "updated_at": "2026-11-19T09:07:33Z",
+  "files": {
+    ".gitattributes": {
+      "role": "index",
+      "sha256": "21fa16a2122e2b0360b47502c577428b645437e08e9e87ffba661f84853cb476",
+      "size": 291,
+      "normalized_sha256": "21fa16a2122e2b0360b47502c577428b645437e08e9e87ffba661f84853cb476"
+    },
+    ".gitignore": {
+      "role": "index",
+      "sha256": "f2d097f8aad391c2e1795671d0f4c79cd31569222142fd62d9086bd37b27a749",
+      "size": 281,
+      "normalized_sha256": "f2d097f8aad391c2e1795671d0f4c79cd31569222142fd62d9086bd37b27a749"
+    },
+    "AGENTS.md": {
+      "role": "index",
+      "sha256": "cb7a991cf022786a31a3ded62a79958c433e136f68a99b25a4131723877c4f7c",
+      "size": 14742,
+      "normalized_sha256": "cb7a991cf022786a31a3ded62a79958c433e136f68a99b25a4131723877c4f7c"
+    },
+    "CHANGELOG.md": {
+      "role": "index",
+      "sha256": "4567bee618da39678a38ded1b8d8b40750316dd3526bd60efbc6cc47a9883a4e",
+      "size": 2623,
+      "normalized_sha256": "4567bee618da39678a38ded1b8d8b40750316dd3526bd60efbc6cc47a9883a4e"
+    },
+    "GycLocationKuikly.podspec": {
+      "role": "index",
+      "sha256": "61c6afd017eeaec76857e6f2c7e3a297f14b17f9a3cf88cbc116fe62b1d95920",
+      "size": 717,
+      "normalized_sha256": "61c6afd017eeaec76857e6f2c7e3a297f14b17f9a3cf88cbc116fe62b1d95920"
+    },
+    "LICENSE": {
+      "role": "index",
+      "sha256": "c69e86da3fc2081768d5839c99bf63ee397a308f78e6f61cd2babc530a36f9cc",
+      "size": 11356,
+      "normalized_sha256": "c69e86da3fc2081768d5839c99bf63ee397a308f78e6f61cd2babc530a36f9cc"
+    },
+    "README.md": {
+      "role": "index",
+      "sha256": "f72a7e3e2662c755d76541f8f627a9ed6e786de1b09b02945b2a18ea7f5faaae",
+      "size": 9878,
+      "normalized_sha256": "f72a7e3e2662c755d76541f8f627a9ed6e786de1b09b02945b2a18ea7f5faaae"
+    },
+    "aoci.code.txt": {
+      "role": "index",
+      "sha256": "bbb639e954cdac099744d645778550ae9fb09751512c401aa6b9a02d5eaf5459",
+      "size": 24757,
+      "normalized_sha256": "bbb639e954cdac099744d645778550ae9fb09751512c401aa6b9a02d5eaf5459"
+    },
+    "aoci.meta.txt": {
+      "role": "index",
+      "sha256": "fbc304fa05182547e96f1f8404c7c30ad6c366bba9589523f1019c2c1da0427c",
+      "size": 1989,
+      "normalized_sha256": "fbc304fa05182547e96f1f8404c7c30ad6c366bba9589523f1019c2c1da0427c"
+    },
+    "aoci.txt": {
+      "role": "index",
+      "sha256": "0bf42ea877ed8fe9726dce3545b69351200afee571799c5b07ee87eedd6a48b0",
+      "size": 297,
+      "normalized_sha256": "0bf42ea877ed8fe9726dce3545b69351200afee571799c5b07ee87eedd6a48b0"
+    },
+    "build.gradle.kts": {
+      "role": "index",
+      "sha256": "e45c0a31749cf61ce73db369373c24cfdefb3377bb99c97d7017b5d5114b6348",
+      "size": 759,
+      "normalized_sha256": "e45c0a31749cf61ce73db369373c24cfdefb3377bb99c97d7017b5d5114b6348"
+    },
+    "docs/0.1.3发布验收.md": {
+      "role": "index",
+      "sha256": "b03b0c3b99bfbf17a5eb71f6ec380718a78e1f7fb6c5ca96f57d8b9e03a04098",
+      "size": 5091,
+      "normalized_sha256": "b03b0c3b99bfbf17a5eb71f6ec380718a78e1f7fb6c5ca96f57d8b9e03a04098"
+    },
+    "docs/功能与平台差异.md": {
+      "role": "index",
+      "sha256": "e700f101c203fa04ea2622c7c05cb99fc0384b1a9c45040daf9779beab43600a",
+      "size": 12311,
+      "normalized_sha256": "e700f101c203fa04ea2622c7c05cb99fc0384b1a9c45040daf9779beab43600a"
+    },
+    "docs/发布验收-0.1.2.md": {
+      "role": "index",
+      "sha256": "9f311d08dfc9f3d0ed7fcb17ceba90597f340d05212582708ad8d176b545e985",
+      "size": 2723,
+      "normalized_sha256": "9f311d08dfc9f3d0ed7fcb17ceba90597f340d05212582708ad8d176b545e985"
+    },
+    "docs/完整源码审查.md": {
+      "role": "index",
+      "sha256": "9692d00af3141dcc08ee4eb57d7c31a75becdd508e958534460fe1bdcdb967c3",
+      "size": 5216,
+      "normalized_sha256": "9692d00af3141dcc08ee4eb57d7c31a75becdd508e958534460fe1bdcdb967c3"
+    },
+    "docs/开发与验证.md": {
+      "role": "index",
+      "sha256": "6f2d6330a11fbbd70f5ab316338344a4e5d8f1502c376688d09f6cf2c10c820e",
+      "size": 8025,
+      "normalized_sha256": "6f2d6330a11fbbd70f5ab316338344a4e5d8f1502c376688d09f6cf2c10c820e"
+    },
+    "docs/接入指南.md": {
+      "role": "index",
+      "sha256": "6e1d9b5c0dd3ab71584dbfdadf6a3b6b9affb8e131da0a6c29fe74f2d61421be",
+      "size": 8099,
+      "normalized_sha256": "6e1d9b5c0dd3ab71584dbfdadf6a3b6b9affb8e131da0a6c29fe74f2d61421be"
+    },
+    "gradle.properties": {
+      "role": "index",
+      "sha256": "b9d277cab8e8ed045e99e50945a30f6526d1fe0391dcf09080619d7d9657ab9a",
+      "size": 92,
+      "normalized_sha256": "b9d277cab8e8ed045e99e50945a30f6526d1fe0391dcf09080619d7d9657ab9a"
+    },
+    "gradle/native-toolchain.properties": {
+      "role": "index",
+      "sha256": "ca6881c69ac4b9eefa1654e378ac43f080d73e0ed853efcfc965c28b0a71ec9d",
+      "size": 88,
+      "normalized_sha256": "ca6881c69ac4b9eefa1654e378ac43f080d73e0ed853efcfc965c28b0a71ec9d"
+    },
+    "gradle/wrapper/gradle-wrapper.jar": {
+      "role": "index",
+      "sha256": "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637",
+      "size": 59203
+    },
+    "gradle/wrapper/gradle-wrapper.properties": {
+      "role": "index",
+      "sha256": "dcb542328654fb670759f0cbf4710c873c585bbb52896f0c836b7b3c69d472ac",
+      "size": 203,
+      "normalized_sha256": "dcb542328654fb670759f0cbf4710c873c585bbb52896f0c836b7b3c69d472ac"
+    },
+    "gradlew": {
+      "role": "index",
+      "sha256": "63135287117a1e6d12c84580f1f49c61d1ba02218ecd28660605e97f976e7d65",
+      "size": 5766,
+      "normalized_sha256": "63135287117a1e6d12c84580f1f49c61d1ba02218ecd28660605e97f976e7d65"
+    },
+    "gradlew.bat": {
+      "role": "index",
+      "sha256": "c46a27c79007746de5922b17abb6230d64ad8b1ba3ad1585ee5c6543c2a9b129",
+      "size": 2674,
+      "normalized_sha256": "c46a27c79007746de5922b17abb6230d64ad8b1ba3ad1585ee5c6543c2a9b129"
+    },
+    "iosApp/KuiklyTests/ModuleLifecycleCheck.swift": {
+      "role": "index",
+      "sha256": "8bdf3a259575e704a69f9b8b45b310b9582b50ff7a4c4642da9c602415ddfc9e",
+      "size": 8253,
+      "normalized_sha256": "8bdf3a259575e704a69f9b8b45b310b9582b50ff7a4c4642da9c602415ddfc9e"
+    },
+    "iosApp/Sources/GycLocationKuikly/GycLocationModule.swift": {
+      "role": "index",
+      "sha256": "6c1c7e1aefc278de50aa53d8c0b8c9b0443ef65c2da56a3e0e1104d3afdeb8f2",
+      "size": 3126,
+      "normalized_sha256": "6c1c7e1aefc278de50aa53d8c0b8c9b0443ef65c2da56a3e0e1104d3afdeb8f2"
+    },
+    "jitpack-install.sh": {
+      "role": "index",
+      "sha256": "68d6af4d63edfb1e01eb61f49ed2ed4bb094978875a29238d29bf3ad1cc80315",
+      "size": 4709,
+      "normalized_sha256": "68d6af4d63edfb1e01eb61f49ed2ed4bb094978875a29238d29bf3ad1cc80315"
+    },
+    "jitpack.yml": {
+      "role": "index",
+      "sha256": "0e54d28098c21a8dc81df7b700f1f1dd0062bf6cb4390efe48555d98ef674748",
+      "size": 65,
+      "normalized_sha256": "0e54d28098c21a8dc81df7b700f1f1dd0062bf6cb4390efe48555d98ef674748"
+    },
+    "location-core/build.gradle.kts": {
+      "role": "index",
+      "sha256": "4f811f1fa56042ff0b08180f312d593f30980852e9272bdf56986ea2fd93fbe6",
+      "size": 1205,
+      "normalized_sha256": "4f811f1fa56042ff0b08180f312d593f30980852e9272bdf56986ea2fd93fbe6"
+    },
+    "location-core/src/androidMain/kotlin/io/github/gycrosskit/location/AndroidLocationClient.kt": {
+      "role": "index",
+      "sha256": "108d10f4f8fc003fffe04a4efe6fd96da8a6344e389c34901ecf4080c42362a1",
+      "size": 5924,
+      "normalized_sha256": "108d10f4f8fc003fffe04a4efe6fd96da8a6344e389c34901ecf4080c42362a1"
+    },
+    "location-core/src/androidUnitTest/kotlin/io/github/gycrosskit/location/AndroidLocationDeadlineTest.kt": {
+      "role": "index",
+      "sha256": "eae25e3e6813e0d4499fa753b7a4659776707b231b84447f3bb37224f99799cb",
+      "size": 1974,
+      "normalized_sha256": "eae25e3e6813e0d4499fa753b7a4659776707b231b84447f3bb37224f99799cb"
+    },
+    "location-core/src/androidUnitTest/kotlin/io/github/gycrosskit/location/AndroidLocationProviderTest.kt": {
+      "role": "index",
+      "sha256": "cff2f75e22efa24836dbc7df85540c078002e76eaa44de5ff3d94eab8dfe1918",
+      "size": 7481,
+      "normalized_sha256": "cff2f75e22efa24836dbc7df85540c078002e76eaa44de5ff3d94eab8dfe1918"
+    },
+    "location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt": {
+      "role": "index",
+      "sha256": "c60f5541d1bcf93bc27ef36251cb55ac529e8cd426ac751322d4d9e901141be0",
+      "size": 3456,
+      "normalized_sha256": "c60f5541d1bcf93bc27ef36251cb55ac529e8cd426ac751322d4d9e901141be0"
+    },
+    "location-core/src/commonTest/kotlin/io/github/gycrosskit/location/LocationOptionsTest.kt": {
+      "role": "index",
+      "sha256": "c81dbbd9ec88e8a4f2b0784dab447d5ceda2542efff710d3e8911c7b281d0e69",
+      "size": 2921,
+      "normalized_sha256": "c81dbbd9ec88e8a4f2b0784dab447d5ceda2542efff710d3e8911c7b281d0e69"
+    },
+    "location-core/src/iosMain/kotlin/io/github/gycrosskit/location/IosLocationClient.kt": {
+      "role": "index",
+      "sha256": "118d4ff02292879d514be2ea94527edc67a1e13b08386fab0740ac3c1e364150",
+      "size": 5100,
+      "normalized_sha256": "118d4ff02292879d514be2ea94527edc67a1e13b08386fab0740ac3c1e364150"
+    },
+    "location-core/src/iosTest/kotlin/io/github/gycrosskit/location/DesiredAccuracyTest.kt": {
+      "role": "index",
+      "sha256": "0fee4765e982e146467aec88e2eced1bc40d3866cfb4cb9c754853b5ff14b85e",
+      "size": 1161,
+      "normalized_sha256": "0fee4765e982e146467aec88e2eced1bc40d3866cfb4cb9c754853b5ff14b85e"
+    },
+    "location-core/src/iosTest/kotlin/io/github/gycrosskit/location/LocationFailureTest.kt": {
+      "role": "index",
+      "sha256": "9eed6ee121e4ded78569a8f920d16269bec4f400498a94955be517dfd8d662d6",
+      "size": 2083,
+      "normalized_sha256": "9eed6ee121e4ded78569a8f920d16269bec4f400498a94955be517dfd8d662d6"
+    },
+    "location-kuikly/build.gradle.kts": {
+      "role": "index",
+      "sha256": "d718a7999b7a6cd3cf9da332cd401b5dd53395fddbfb7602132a3ff112d43279",
+      "size": 1171,
+      "normalized_sha256": "d718a7999b7a6cd3cf9da332cd401b5dd53395fddbfb7602132a3ff112d43279"
+    },
+    "location-kuikly/src/androidMain/kotlin/io/github/gycrosskit/location/kuikly/AndroidLocationModule.kt": {
+      "role": "index",
+      "sha256": "f73320f99de5e7f0ac04f2fd8b3bde2cb1e649067ee19a2e7064a8e8a460782f",
+      "size": 1059,
+      "normalized_sha256": "f73320f99de5e7f0ac04f2fd8b3bde2cb1e649067ee19a2e7064a8e8a460782f"
+    },
+    "location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModule.kt": {
+      "role": "index",
+      "sha256": "82a2f1556cab69c946b10fdcb1b07cb48e64c780c537ce69700f4fff74c698d3",
+      "size": 4960,
+      "normalized_sha256": "82a2f1556cab69c946b10fdcb1b07cb48e64c780c537ce69700f4fff74c698d3"
+    },
+    "location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModuleHandler.kt": {
+      "role": "index",
+      "sha256": "2a2d4e2a12f0fa81e22778811c1abf20266e5ada7e309f721679f170b77a8ac7",
+      "size": 4127,
+      "normalized_sha256": "2a2d4e2a12f0fa81e22778811c1abf20266e5ada7e309f721679f170b77a8ac7"
+    },
+    "location-kuikly/src/iosMain/kotlin/io/github/gycrosskit/location/kuikly/IosLocationModuleHandler.kt": {
+      "role": "index",
+      "sha256": "3e381bf711de5dfaa64b144511b44ef129fd034f7cd0704668e3ef78cf47cffd",
+      "size": 471,
+      "normalized_sha256": "3e381bf711de5dfaa64b144511b44ef129fd034f7cd0704668e3ef78cf47cffd"
+    },
+    "ohos/AppScope/app.json5": {
+      "role": "index",
+      "sha256": "452632c1a71510cdb0e16f2095d69535fb8bedd791e92725c41bdfccdd3c4e2c",
+      "size": 214,
+      "normalized_sha256": "452632c1a71510cdb0e16f2095d69535fb8bedd791e92725c41bdfccdd3c4e2c"
+    },
+    "ohos/build-profile.json5": {
+      "role": "index",
+      "sha256": "cb62950cbfd40ccfc79ac9f8ee434f2f5a26be4aafda5d457d6cb5bf0346f46a",
+      "size": 342,
+      "normalized_sha256": "cb62950cbfd40ccfc79ac9f8ee434f2f5a26be4aafda5d457d6cb5bf0346f46a"
+    },
+    "ohos/hvigor/hvigor-config.json5": {
+      "role": "index",
+      "sha256": "01a4a20bc34adffe85e2328cc2314c1128e5f2da4d276dd3e08b2d75100b16c1",
+      "size": 108,
+      "normalized_sha256": "01a4a20bc34adffe85e2328cc2314c1128e5f2da4d276dd3e08b2d75100b16c1"
+    },
+    "ohos/hvigorfile.ts": {
+      "role": "index",
+      "sha256": "284df6f71686f395e87b74419fbe0c34529a647809513fa7944cbcba01908854",
+      "size": 103,
+      "normalized_sha256": "284df6f71686f395e87b74419fbe0c34529a647809513fa7944cbcba01908854"
+    },
+    "ohos/location-native/CHANGELOG.md": {
+      "role": "index",
+      "sha256": "557d228b17fcf09088fcc59873861201a9ea42efc04a9618384377172b1d323d",
+      "size": 1694,
+      "normalized_sha256": "557d228b17fcf09088fcc59873861201a9ea42efc04a9618384377172b1d323d"
+    },
+    "ohos/location-native/Index.ets": {
+      "role": "index",
+      "sha256": "883edd5091e13b35af6aae9229626af68eb110f42361ddfa7eebc0efca429728",
+      "size": 197,
+      "normalized_sha256": "883edd5091e13b35af6aae9229626af68eb110f42361ddfa7eebc0efca429728"
+    },
+    "ohos/location-native/LICENSE": {
+      "role": "index",
+      "sha256": "c69e86da3fc2081768d5839c99bf63ee397a308f78e6f61cd2babc530a36f9cc",
+      "size": 11356,
+      "normalized_sha256": "c69e86da3fc2081768d5839c99bf63ee397a308f78e6f61cd2babc530a36f9cc"
+    },
+    "ohos/location-native/README.md": {
+      "role": "index",
+      "sha256": "a7619c280cc5e05c08ff5b5d2b600e136456530557d0c6ece5f64a9d178b2b85",
+      "size": 1958,
+      "normalized_sha256": "a7619c280cc5e05c08ff5b5d2b600e136456530557d0c6ece5f64a9d178b2b85"
+    },
+    "ohos/location-native/build-profile.json5": {
+      "role": "index",
+      "sha256": "3e0d7b0aab87ea90dd16bede7e0a093d3d781b475c52e6233012eddb078be63e",
+      "size": 93,
+      "normalized_sha256": "3e0d7b0aab87ea90dd16bede7e0a093d3d781b475c52e6233012eddb078be63e"
+    },
+    "ohos/location-native/hvigorfile.ts": {
+      "role": "index",
+      "sha256": "8c004b8b98616fc371de71759be919b5f94a2c778da75e6501902b9af6d22d40",
+      "size": 103,
+      "normalized_sha256": "8c004b8b98616fc371de71759be919b5f94a2c778da75e6501902b9af6d22d40"
+    },
+    "ohos/location-native/oh-package-lock.json5": {
+      "role": "index",
+      "sha256": "53bffb58dbbebc9c90a7d622c5fe6cdd1ffa2dc6ebffaa842a0741c5b5aca255",
+      "size": 1283,
+      "normalized_sha256": "53bffb58dbbebc9c90a7d622c5fe6cdd1ffa2dc6ebffaa842a0741c5b5aca255"
+    },
+    "ohos/location-native/oh-package.json5": {
+      "role": "index",
+      "sha256": "dcacd230ad8720391c1b208f449beea6ff1daf3247902007f4047c0c3acf0058",
+      "size": 382,
+      "normalized_sha256": "dcacd230ad8720391c1b208f449beea6ff1daf3247902007f4047c0c3acf0058"
+    },
+    "ohos/location-native/src/main/ets/GycLocationModule.ets": {
+      "role": "index",
+      "sha256": "88b562bb655ea7a567b577f6032cf7703b43295357424e48ed845aa4c823dc65",
+      "size": 3131,
+      "normalized_sha256": "88b562bb655ea7a567b577f6032cf7703b43295357424e48ed845aa4c823dc65"
+    },
+    "ohos/location-native/src/main/ets/LocationClient.ets": {
+      "role": "index",
+      "sha256": "09709feb1f2fdbfb914c535cd56cdbc69f282bcd9f2e46888637fc52c1ad2a59",
+      "size": 6628,
+      "normalized_sha256": "09709feb1f2fdbfb914c535cd56cdbc69f282bcd9f2e46888637fc52c1ad2a59"
+    },
+    "ohos/location-native/src/main/module.json5": {
+      "role": "index",
+      "sha256": "093555034ca4a934fbcdf8527e5415924ce3c79387d9497203a32c13bf96812e",
+      "size": 112,
+      "normalized_sha256": "093555034ca4a934fbcdf8527e5415924ce3c79387d9497203a32c13bf96812e"
+    },
+    "ohos/oh-package.json5": {
+      "role": "index",
+      "sha256": "e7d3725f52a34df45a484d61801e320c53560a401668eaa04b100b7d667ef14c",
+      "size": 103,
+      "normalized_sha256": "e7d3725f52a34df45a484d61801e320c53560a401668eaa04b100b7d667ef14c"
+    },
+    "ohos/tests/location.test.cjs": {
+      "role": "index",
+      "sha256": "1e32de00464720771e306e8a964ec48d755a07c26246b427589cc6b2caad6f95",
+      "size": 7022,
+      "normalized_sha256": "1e32de00464720771e306e8a964ec48d755a07c26246b427589cc6b2caad6f95"
+    },
+    "release-pack.py": {
+      "role": "index",
+      "sha256": "b8b803f3376f47d72400ed86402eb59a027a0f2a9b594328c351554369e6b182",
+      "size": 1149,
+      "normalized_sha256": "b8b803f3376f47d72400ed86402eb59a027a0f2a9b594328c351554369e6b182"
+    },
+    "scripts/build.sh": {
+      "role": "index",
+      "sha256": "66a41e1e7a70ee73fb448e09e146edd328dbcdc358af8202b06f141b10be20a6",
+      "size": 2311,
+      "normalized_sha256": "66a41e1e7a70ee73fb448e09e146edd328dbcdc358af8202b06f141b10be20a6"
+    },
+    "scripts/check-maven.py": {
+      "role": "index",
+      "sha256": "b14800c5a8ee8c2c760e092cda967286eb33ed7a5cb88e4b8ed15229748de908",
+      "size": 8996,
+      "normalized_sha256": "b14800c5a8ee8c2c760e092cda967286eb33ed7a5cb88e4b8ed15229748de908"
+    },
+    "scripts/check-public-maven.py": {
+      "role": "index",
+      "sha256": "1f38e825e4dd966a4faa18d7315d6536841b03145b3fc0ace366bcde1817b203",
+      "size": 17590,
+      "normalized_sha256": "1f38e825e4dd966a4faa18d7315d6536841b03145b3fc0ace366bcde1817b203"
+    },
+    "scripts/ci-build-kuikly-render.sh": {
+      "role": "index",
+      "sha256": "efb688708fc754f2d0b32272eff8994dd77b6e6b6020c68ca02f2420c5cfa8d3",
+      "size": 2850,
+      "normalized_sha256": "efb688708fc754f2d0b32272eff8994dd77b6e6b6020c68ca02f2420c5cfa8d3"
+    },
+    "scripts/ci-java.security": {
+      "role": "index",
+      "sha256": "6ece11657dde8c74b4bb4dd7bf1c0c4e8e7719bee3ca7f8070be87ad8f2eaac6",
+      "size": 66,
+      "normalized_sha256": "6ece11657dde8c74b4bb4dd7bf1c0c4e8e7719bee3ca7f8070be87ad8f2eaac6"
+    },
+    "scripts/ci-release.sh": {
+      "role": "index",
+      "sha256": "a5c13d47df28dbcbcb913343fbc56e8c6d94102c3fb699580b563921ea9f1cec",
+      "size": 1712,
+      "normalized_sha256": "a5c13d47df28dbcbcb913343fbc56e8c6d94102c3fb699580b563921ea9f1cec"
+    },
+    "scripts/ci-repositories.gradle": {
+      "role": "index",
+      "sha256": "0541b1d025b912cdcd33c2abc14091d3c9b7996b9085bffc852f33b186105c4b",
+      "size": 2168,
+      "normalized_sha256": "0541b1d025b912cdcd33c2abc14091d3c9b7996b9085bffc852f33b186105c4b"
+    },
+    "scripts/jitpack-metadata.py": {
+      "role": "index",
+      "sha256": "9d6becda7241ba10df34fe335e17fb93904be772868cc9ad4ffae4a8bc74a448",
+      "size": 2999,
+      "normalized_sha256": "9d6becda7241ba10df34fe335e17fb93904be772868cc9ad4ffae4a8bc74a448"
+    },
+    "scripts/package-maven.sh": {
+      "role": "index",
+      "sha256": "7c7e31f5d264a5813c475475a819efe2f5822f7309ffbe07af9560bc9984f6f7",
+      "size": 712,
+      "normalized_sha256": "7c7e31f5d264a5813c475475a819efe2f5822f7309ffbe07af9560bc9984f6f7"
+    },
+    "scripts/test-check-maven.py": {
+      "role": "index",
+      "sha256": "50b968d34cc1d2278bf280f46203d447bd7a306be77895fa4eadcc16409223a1",
+      "size": 5070,
+      "normalized_sha256": "50b968d34cc1d2278bf280f46203d447bd7a306be77895fa4eadcc16409223a1"
+    },
+    "scripts/test-jitpack-metadata.py": {
+      "role": "index",
+      "sha256": "c7e3bac1b0b7fced7a7f8c8ae9112ca0e0c90c6491f0429fb9dd9dfe59954dae",
+      "size": 4286,
+      "normalized_sha256": "c7e3bac1b0b7fced7a7f8c8ae9112ca0e0c90c6491f0429fb9dd9dfe59954dae"
+    },
+    "scripts/verify-kuikly-assembly.sh": {
+      "role": "index",
+      "sha256": "2969a3903f4891a9fc1795936c8f544157dc03a1b3e2f618fa2d6cb77fddb242",
+      "size": 1285,
+      "normalized_sha256": "2969a3903f4891a9fc1795936c8f544157dc03a1b3e2f618fa2d6cb77fddb242"
+    },
+    "scripts/verify-kuikly-module.sh": {
+      "role": "index",
+      "sha256": "36b31d3d7cda47271aec622e0a068a1ceb831348c0c5da6ed970193507e85d82",
+      "size": 8429,
+      "normalized_sha256": "36b31d3d7cda47271aec622e0a068a1ceb831348c0c5da6ed970193507e85d82"
+    },
+    "settings.gradle.kts": {
+      "role": "index",
+      "sha256": "198d50a6cde55cb6f8faef5e6a9cfc55fd6d4c72231d2bd46dff857aba472bbe",
+      "size": 1800,
+      "normalized_sha256": "198d50a6cde55cb6f8faef5e6a9cfc55fd6d4c72231d2bd46dff857aba472bbe"
+    },
+    "tests/kuikly-module.cjs": {
+      "role": "index",
+      "sha256": "865cad463fb1b1739f26396ac0f83ffae353e079a3ee140d821b409df6cec2c2",
+      "size": 3318,
+      "normalized_sha256": "865cad463fb1b1739f26396ac0f83ffae353e079a3ee140d821b409df6cec2c2"
+    },
+    "tests/test_jitpack_install.py": {
+      "role": "index",
+      "sha256": "8f3ddf2747efde26618e2c3796e595e40406e372d82b01a53a84b0a4a5a07caa",
+      "size": 6210,
+      "normalized_sha256": "8f3ddf2747efde26618e2c3796e595e40406e372d82b01a53a84b0a4a5a07caa"
+    },
+    "verification-consumer/NativeModuleAssembly.swift": {
+      "role": "index",
+      "sha256": "9f8bf42851bdc58434af82ffad73b34829e448be7a3a3c564e619fb554fb5162",
+      "size": 346,
+      "normalized_sha256": "9f8bf42851bdc58434af82ffad73b34829e448be7a3a3c564e619fb554fb5162"
+    },
+    "verification-consumer/build.gradle.kts": {
+      "role": "index",
+      "sha256": "b428099dd7175fe1a72b18d2386708afa21b133fdc6813cda0baac23617cfe92",
+      "size": 2255,
+      "normalized_sha256": "b428099dd7175fe1a72b18d2386708afa21b133fdc6813cda0baac23617cfe92"
+    },
+    "verification-consumer/gradle.properties": {
+      "role": "index",
+      "sha256": "67a9a28edbc077f0c5ca850398d277c49d747687147aa518e3b5d81581ab0da7",
+      "size": 51,
+      "normalized_sha256": "67a9a28edbc077f0c5ca850398d277c49d747687147aa518e3b5d81581ab0da7"
+    },
+    "verification-consumer/settings.gradle.kts": {
+      "role": "index",
+      "sha256": "e3e4d97ab5636ba2b11fc24342a590bef5e05df7069baae15965a05cc4b6989e",
+      "size": 726,
+      "normalized_sha256": "e3e4d97ab5636ba2b11fc24342a590bef5e05df7069baae15965a05cc4b6989e"
+    },
+    "verification-consumer/src/androidMain/kotlin/AndroidProbe.kt": {
+      "role": "index",
+      "sha256": "8da456e103557dd409cd7971100d1de278d01faef6a9a6e5e62f13cae93c2975",
+      "size": 170,
+      "normalized_sha256": "8da456e103557dd409cd7971100d1de278d01faef6a9a6e5e62f13cae93c2975"
+    },
+    "verification-consumer/src/commonMain/kotlin/Probe.kt": {
+      "role": "index",
+      "sha256": "6e620e6e334bb27a8d8f85d6ecd842893a0b588fc7631704595d318ba2f0dbf9",
+      "size": 167,
+      "normalized_sha256": "6e620e6e334bb27a8d8f85d6ecd842893a0b588fc7631704595d318ba2f0dbf9"
+    },
+    "verification-consumer/src/iosMain/kotlin/IosProbe.kt": {
+      "role": "index",
+      "sha256": "bc5eaab8262d0e3720975f15e04053b9abc7be3052395a72d9a6df80778676ce",
+      "size": 107,
+      "normalized_sha256": "bc5eaab8262d0e3720975f15e04053b9abc7be3052395a72d9a6df80778676ce"
+    },
+    "verification-consumer/src/kuiklyNativeAndroidMain/kotlin/NativeModuleProbe.kt": {
+      "role": "index",
+      "sha256": "78399f1b2042bef5ca368eeb5bdc9844bf0bb74f11cffd811423b05d962e543e",
+      "size": 259,
+      "normalized_sha256": "78399f1b2042bef5ca368eeb5bdc9844bf0bb74f11cffd811423b05d962e543e"
+    },
+    "verification-consumer/src/kuiklyNativeIosMain/kotlin/NativeModuleProbe.kt": {
+      "role": "index",
+      "sha256": "ff6a44f633a03b56eea21a18da4976fc54c1aec11478e18381f96f632cf9f1d1",
+      "size": 101,
+      "normalized_sha256": "ff6a44f633a03b56eea21a18da4976fc54c1aec11478e18381f96f632cf9f1d1"
+    },
+    "verification-consumer/src/ohosArm64Main/kotlin/OhosProbe.kt": {
+      "role": "index",
+      "sha256": "c5cff745233946e0c5fe7728176b0972e0a7bc09640ab83ad235253e6a1d82fe",
+      "size": 405,
+      "normalized_sha256": "c5cff745233946e0c5fe7728176b0972e0a7bc09640ab83ad235253e6a1d82fe"
+    },
+    "verification-consumer/候选验收.md": {
+      "role": "index",
+      "sha256": "18d9a588f2ac200909dca030fea1412cb1c8cfe3a61c61311308e61e555c3e0b",
+      "size": 4926,
+      "normalized_sha256": "18d9a588f2ac200909dca030fea1412cb1c8cfe3a61c61311308e61e555c3e0b"
+    },
+    "verification-kuikly/build.gradle.kts": {
+      "role": "index",
+      "sha256": "8990d1604f9f558872b44d72ca48fb40b494c2964f4cddfae2223e60ce8ecbf8",
+      "size": 651,
+      "normalized_sha256": "8990d1604f9f558872b44d72ca48fb40b494c2964f4cddfae2223e60ce8ecbf8"
+    },
+    "verification-kuikly/settings.gradle.kts": {
+      "role": "index",
+      "sha256": "00ad76f82bab3e353d5d41378df5424ff1e1545071dc638ff840c55619c5d064",
+      "size": 451,
+      "normalized_sha256": "00ad76f82bab3e353d5d41378df5424ff1e1545071dc638ff840c55619c5d064"
+    },
+    "verification-kuikly/src/test/kotlin/KuiklyJson.kt": {
+      "role": "index",
+      "sha256": "01efa207fce232969dfe7d6ea5915051356a4d81708cdeb3bb882b3cc5368367",
+      "size": 1798,
+      "normalized_sha256": "01efa207fce232969dfe7d6ea5915051356a4d81708cdeb3bb882b3cc5368367"
+    },
+    "verification-kuikly/src/test/kotlin/KuiklyTransport.kt": {
+      "role": "index",
+      "sha256": "18e93df466aded407288d0ae3ce5a9d3a27b8e042554670fac024e5ce0d90c7f",
+      "size": 913,
+      "normalized_sha256": "18e93df466aded407288d0ae3ce5a9d3a27b8e042554670fac024e5ce0d90c7f"
+    },
+    "verification-kuikly/src/test/kotlin/LocationModuleDeadlineTest.kt": {
+      "role": "index",
+      "sha256": "701b3b3f780eaee4e12bf368daa33b39c39dd3d6f6c6c6ea2a83311b462b614a",
+      "size": 4928,
+      "normalized_sha256": "701b3b3f780eaee4e12bf368daa33b39c39dd3d6f6c6c6ea2a83311b462b614a"
+    },
+    "verification-kuikly/src/test/kotlin/LocationModuleHandlerTest.kt": {
+      "role": "index",
+      "sha256": "6da1a88a8bf757fb074fe0d9735a146fc8a720c1827e0a47f3e6e073ed3f7aa1",
+      "size": 4396,
+      "normalized_sha256": "6da1a88a8bf757fb074fe0d9735a146fc8a720c1827e0a47f3e6e073ed3f7aa1"
+    },
+    "verification/ci/test_cache_contract.py": {
+      "role": "index",
+      "sha256": "0a2240e39d87b52386a47fe69ceaea0a61d13a45b52ed8fd067679c05b585f3a",
+      "size": 678,
+      "normalized_sha256": "0a2240e39d87b52386a47fe69ceaea0a61d13a45b52ed8fd067679c05b585f3a"
+    },
+    "verification/ci/test_module_check.py": {
+      "role": "index",
+      "sha256": "63abd38366f7bcb7158fba51bf7303077755fd346ab6dc6cc92d149267550591",
+      "size": 5721,
+      "normalized_sha256": "63abd38366f7bcb7158fba51bf7303077755fd346ab6dc6cc92d149267550591"
+    }
+  },
+  "managed_scope": {
+    "version": "managed-scope-baseline/v1",
+    "policy_identity": "8d28b84e19128a94f32639591473fb957e1442a990d09030895878dc6bab66ca",
+    "observe_change_policy": "review_required",
+    "budget_policy_identity": "15e9b37a6c57e9bf03c9df3d0d049eb5b9a7f5540f9d34960408114e2538a32d",
+    "budget_policy": {
+      "version": "cognition-budget-policy/v1",
+      "mode": "enforce",
+      "whole_index": {
+        "target_tokens": 200000,
+        "warning_tokens": 300000,
+        "max_tokens": 400000
+      },
+      "r": [
+        {
+          "min_c": 1,
+          "max_c": 4,
+          "target_tokens": 25,
+          "max_tokens": 50
+        },
+        {
+          "min_c": 5,
+          "max_c": 7,
+          "target_tokens": 45,
+          "max_tokens": 90
+        },
+        {
+          "min_c": 8,
+          "max_c": 8,
+          "target_tokens": 70,
+          "max_tokens": 140
+        },
+        {
+          "min_c": 9,
+          "max_c": 9,
+          "target_tokens": 90,
+          "max_tokens": 180
+        }
+      ],
+      "s": [
+        {
+          "min_c": 1,
+          "max_c": 4,
+          "target_tokens": 20,
+          "max_tokens": 40
+        },
+        {
+          "min_c": 5,
+          "max_c": 7,
+          "target_tokens": 40,
+          "max_tokens": 80
+        },
+        {
+          "min_c": 8,
+          "max_c": 8,
+          "target_tokens": 70,
+          "max_tokens": 140
+        },
+        {
+          "min_c": 9,
+          "max_c": 9,
+          "target_tokens": 100,
+          "max_tokens": 200
+        }
+      ]
+    },
+    "apply_authorization_mode": "auto"
+  }
+}

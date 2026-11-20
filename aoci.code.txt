@@ -1,0 +1,163 @@
+#AOCI-CODE-VOLUME: 1
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/===
+.gitattributes[FV4T]: F:统一文本检出的 LF 字节以保持 AOCI 原始摘要跨平台一致 | R:- | A:- | S:二进制自动识别，保持原字节
+.gitignore[FV4T]: F:排除构建缓存、工具链本机配置及 CI 下发脚本 | R:- | A:- | S:共享 CI 脚本由可信入口下发，不随组件提交
+AGENTS.md[SQ7L]: F:约束定位组件评审、取消及请求归属，并定义 AOCI 读取和维护合同 | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt | A:- | S:取消必须继续传播，旧请求不能停止新定位；AOCI 语义需来自绑定源码
+CHANGELOG.md[SV3T]: F:按版本记录缓存开关、系统精度修复及发布验证边界 | R:- | A:- | S:历史验收不转记为当前发布通过
+GycLocationKuikly.podspec[FV6T]: F:发布 iOS Kuikly receiver 源码 Pod 并约束 Renderer 依赖范围 | R:code:iosApp/Sources/GycLocationKuikly/GycLocationModule.swift | A:GycLocationKuikly/Kuikly | S:从 native-版本 Tag 获取源码，最低 iOS14，宿主选择同一份 Renderer
+LICENSE[SS2M]: F:规定组件 Apache2 许可、分发条件和免责声明 | R:- | A:- | S:-
+README.md[SG7S]: F:提供单次定位能力、三端安装与最小使用并链接AOCI和平台合同 | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt,code:docs/功能与平台差异.md | A:- | S:JVM和OHOS core仅公共API，OHOS原生来自HAR；权限申请和坐标业务归宿主
+build.gradle.kts[FV6T]: F:固定 Kotlin和AGP 插件及全模块 Maven 坐标、版本与 Apache POM 许可 | R:code:settings.gradle.kts | A:VERSION环境变量 | S:缺省版本1.0.3可由环境覆盖，源码默认版本不证明发布
+gradle.properties[FV4T]: F:配置Gradle堆、AndroidX及禁用目标兼容策略 | R:- | A:- | S:-
+gradlew[XV3M]: F:在Unix解析Java和wrapper路径并透传Gradle参数 | R:code:gradle/wrapper/gradle-wrapper.properties | A:命令行参数 | S:-
+gradlew.bat[XV3T]: F:在Windows查找Java并启动Gradle wrapper | R:code:gradle/wrapper/gradle-wrapper.properties | A:命令行参数 | S:-
+jitpack-install.sh[OV7S]: F:核对不可变Tag的来源回执、摘要和安全归档后安装同版Maven制品 | R:code:jitpack.yml | A:repository,VERSION,可选目标目录 | S:校验HEAD和tree、归档尺寸及哈希；拒绝路径穿越、链接、重复成员和膨胀包，禁止重编替代制品
+jitpack.yml[FV5T]: F:使用JDK21运行location同版Maven制品安装入口 | R:code:jitpack-install.sh | A:JitPack install | S:-
+release-pack.py[OV6T]: F:仅将指定版本Maven publication归档并回读metadata与ZIP完整性 | R:code:scripts/package-maven.sh | A:repository,output,version | S:不携带AppleDouble文件，也不将旧staging版本混入候选
+settings.gradle.kts[FV7T]: F:集中配置插件与依赖仓库并包含core和Kuikly两个模块 | R:code:build.gradle.kts | A:location根构建 | S:Kuikly用exclusiveContent读取完整module元数据，避免POM镜像回落到不存在根JAR；禁止子项目声明仓库
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/docs/===
+0.1.3发布验收.md[SV3M]: F:保留0.1.3历史发布、Maven实物校验和远程消费者证据 | R:- | A:- | S:当时 OHPM 精确安装仍 NOTFOUND
+功能与平台差异.md[SG7L]: F:集中定义定位平台差异、参数契约、桥接能力及实际验证范围 | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt,code:location-core/src/androidMain/kotlin/io/github/gycrosskit/location/AndroidLocationClient.kt,code:location-core/src/iosMain/kotlin/io/github/gycrosskit/location/IosLocationClient.kt | A:- | S:缓存年龄只限制缓存，新回调仍检验坐标、精度和时间合法性；权限申请由宿主承担
+发布验收-0.1.2.md[SV3S]: F:保存0.1.2不可变来源、归档和实际远程 Maven消费验证 | R:- | A:- | S:component.url是生产者身份，不作为variant下载路径
+完整源码审查.md[SQ4M]: F:列出历史生产源码审查范围、API调用链与未验收能力 | R:- | A:- | S:历史源码及替身结果不代算设备定位验收
+开发与验证.md[SQ6M]: F:提供定位定向测试、HAR构建、真实SDK Module和消费验证入口 | R:code:scripts/verify-kuikly-module.sh,code:scripts/verify-kuikly-assembly.sh | A:- | S:Simulator生命周期以本轮PASS和完成记录为准，simctl退出0不足以通过
+接入指南.md[SG7M]: F:说明Gradle、前台授权、原生owner和三端Kuikly注册及迁移 | R:code:location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModule.kt,code:GycLocationKuikly.podspec | A:- | S:Maven不替代原生HAR或Pod；请求按页面生命周期取消，保持系统原始坐标
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/gradle/===
+native-toolchain.properties[FV5T]: F:登记厂商Kotlin版本及iOS/OHOS Native目标集合 | R:- | A:- | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/gradle/wrapper/===
+gradle-wrapper.properties[FV4T]: F:固定Gradle8.11.1分发与用户缓存位置 | R:- | A:- | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/iosApp/KuiklyTests/===
+ModuleLifecycleCheck.swift[TQ7M]: F:以真实SDK接口检查receiver重复失效、排队调用、工厂竞态和旧回调隔离 | R:code:iosApp/Sources/GycLocationKuikly/GycLocationModule.swift | A:Scene启动的测试App | S:占位rootView和受控handler只验证生命周期；本轮日志需PASS和COMPLETE且受60秒独立deadline约束
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/iosApp/Sources/GycLocationKuikly/===
+GycLocationModule.swift[IH8T]: F:为每个Renderer创建定位handler并在Main调用、Context线程交付回执 | R:code:location-kuikly/src/iosMain/kotlin/io/github/gycrosskit/location/kuikly/IosLocationModuleHandler.kt | A:configure,hrv_call,invalidate | S:invalidate先在锁内封闭后异步Main释放，禁止Main.sync；工厂竞态创建的handler立即dispose，迟回执不能复活已失效owner
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-core/===
+build.gradle.kts[FV6T]: F:配置定位core的Android/iOS/JVM/OHOS变体、协程依赖与staging发布 | R:- | A:location-core | S:JVM/OHOS变体无系统定位实现；Robolectric独立依赖使用受控镜像
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-core/src/androidMain/kotlin/io/github/gycrosskit/location/===
+AndroidLocationClient.kt[IH8S]: F:用LocationManager在Main执行单次定位、合格缓存和监听等待并映射系统失败 | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt | A:AndroidLocationClient.currentLocation | S:API30起GPS允许粗略授权，旧系统仅精确授权可选GPS；超时重读权限/服务，取消继续传播并释放本请求listener
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-core/src/androidUnitTest/kotlin/io/github/gycrosskit/location/===
+AndroidLocationDeadlineTest.kt[TH5T]: F:验证Android到期重读撤销权限并区分正常超时 | R:code:location-core/src/androidMain/kotlin/io/github/gycrosskit/location/AndroidLocationClient.kt | A:deadlineReadsCurrentPermissionInsteadOfMisreportingTimeout | S:使用Robolectric与虚拟时钟，不调用真实GPS
+AndroidLocationProviderTest.kt[TH6S]: F:覆盖粗略GPS授权版本边界、Provider切换、缓存过滤与监听清理 | R:code:location-core/src/androidMain/kotlin/io/github/gycrosskit/location/AndroidLocationClient.kt | A:AndroidLocationProviderTest | S:API24/29和30/31分组覆盖；模拟位置及服务，不证明设备精度
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-core/src/commonMain/kotlin/io/github/gycrosskit/location/===
+Location.kt[LH9T]: F:定义单次定位参数、读数验收、原始坐标及终态结果的公共契约 | R:- | A:LocationClient,LocationOptions,LocationFix,LocationResult | S:缓存按maxAgeMillis过滤，新回调只校验合法坐标/时间和精度；取消以CancellationException传播；库不申请权限或转换坐标
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-core/src/commonTest/kotlin/io/github/gycrosskit/location/===
+LocationOptionsTest.kt[TH5T]: F:验证定位参数边界、缓存年龄、当前读数和非法坐标时间过滤 | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt | A:LocationOptionsTest | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-core/src/iosMain/kotlin/io/github/gycrosskit/location/===
+IosLocationClient.kt[IH8S]: F:用每请求独占CoreLocation manager/delegate在Main等待首个合格位置 | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt | A:IosLocationClient,desiredAccuracy,locationFailure | S:系统请求精度独立于验收阈值，大概授权用Reduced而精确请求限制1至3000米；暂态locationUnknown继续等待，终态和取消停止监听
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-core/src/iosTest/kotlin/io/github/gycrosskit/location/===
+DesiredAccuracyTest.kt[TH5T]: F:验证系统精度映射限制与无限制结果验收保持独立 | R:code:location-core/src/iosMain/kotlin/io/github/gycrosskit/location/IosLocationClient.kt | A:DesiredAccuracyTest | S:-
+LocationFailureTest.kt[TH5T]: F:验证CoreLocation暂态错误、撤权、服务关闭与fallback优先级 | R:code:location-core/src/iosMain/kotlin/io/github/gycrosskit/location/IosLocationClient.kt | A:LocationFailureTest | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-kuikly/===
+build.gradle.kts[FV6T]: F:配置Kuikly调用侧及Android receiver的多平台依赖和发布变体 | R:code:location-core/build.gradle.kts | A:location-kuikly | S:公开传递core与Kuikly，Android编译为JVM11
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-kuikly/src/androidMain/kotlin/io/github/gycrosskit/location/kuikly/===
+AndroidLocationModule.kt[IH7T]: F:将Renderer调用交给定位handler并在销毁时释放页面请求 | R:code:location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModuleHandler.kt | A:AndroidLocationModule,registerLocationModule | S:每Renderer新建receiver，原生能力client由宿主提供和持有
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/===
+LocationModule.kt[IH8S]: F:串行桥接单次定位并校验回执，按请求ID取消及清理callback | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt | A:LocationModule.currentLocation,dispose | S:watchdog至少请求期限加2秒；空原生回执是Unavailable而超时是TimedOut；resume后仍查disposed，防止迟交付Available
+LocationModuleHandler.kt[IH8S]: F:校验桥接JSON并在Main按请求ID管理独立core定位Job及状态回执 | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt | A:call,dispose | S:ID限JS安全正整数且不重复；旧Job仅在身份仍相同才移除表项，取消不转成功回执，dispose取消本receiver作用域
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/location-kuikly/src/iosMain/kotlin/io/github/gycrosskit/location/kuikly/===
+IosLocationModuleHandler.kt[IH6T]: F:从宿主Shared framework导出iOS定位handler的call与dispose | R:code:location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModuleHandler.kt,code:location-core/src/iosMain/kotlin/io/github/gycrosskit/location/IosLocationClient.kt | A:IosLocationModuleHandler | S:沿用宿主runtime，不创建第二套Kotlin运行时
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/ohos/AppScope/===
+app.json5[FV3T]: F:声明HAR工程演示应用的包标识和历史应用版本 | R:- | A:- | S:应用版本不等于OHPM包版本
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/ohos/===
+build-profile.json5[FV5T]: F:绑定LocationNative模块和HarmonyOS API22产品目标 | R:code:ohos/location-native/build-profile.json5 | A:default产品 | S:target与compatible均6.0.2(22)
+hvigorfile.ts[FV3T]: F:注册根工程Hvigor appTasks | R:- | A:- | S:-
+oh-package.json5[FV3T]: F:声明Hvigor26根工程依赖容器 | R:- | A:- | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/ohos/hvigor/===
+hvigor-config.json5[FV3T]: F:固定Hvigor26模型并保留默认执行及日志配置 | R:- | A:- | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/ohos/location-native/===
+CHANGELOG.md[SV3T]: F:按HAR版本记录缓存控制与各端协同发布变化 | R:- | A:- | S:1.0.3仅对齐候选版本，OHOS定位实现未变
+Index.ets[LH6T]: F:导出HAR原生定位类型、请求及Kuikly receiver | R:code:ohos/location-native/src/main/ets/LocationClient.ets,code:ohos/location-native/src/main/ets/GycLocationModule.ets | A:LocationClient,LocationOptions,LocationFix,LocationResult,LocationRequest,GycLocationModule | S:-
+LICENSE[SS2M]: F:携带HAR分发所需Apache2许可文本 | R:- | A:- | S:-
+README.md[SH6T]: F:说明HAR单次定位安装、授权、取消、缓存选项和Kuikly搭配 | R:code:ohos/location-native/src/main/ets/LocationClient.ets | A:@gycrosskit/location-native | S:1.0.3为候选，精确私库安装与设备验收另行留证
+build-profile.json5[FV4T]: F:配置LocationNative为Stage模式HarmonyOS默认目标 | R:- | A:default目标 | S:-
+hvigorfile.ts[FV3T]: F:注册HAR模块Hvigor harTasks | R:- | A:- | S:-
+oh-package-lock.json5[FV5T]: F:锁定Renderer2.29.1下载完整性与本地Native类型依赖 | R:code:ohos/location-native/oh-package.json5 | A:- | S:锁文件自动生成，宿主统一实际Renderer版本
+oh-package.json5[FV6T]: F:定义location-native候选版本、导出入口和Renderer精确依赖 | R:code:ohos/location-native/Index.ets | A:@gycrosskit/location-native@1.0.3 | S:版本声明不证明Registry已发布或可安装
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/ohos/location-native/src/main/ets/===
+GycLocationModule.ets[IH8T]: F:桥接Kuikly定位请求并按active请求身份隔离取消、结果和销毁 | R:code:ohos/location-native/src/main/ets/LocationClient.ets,code:location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModule.kt | A:GycLocationModule.call,onDestroy | S:cancel匹配ID后先同步撤销归属再停监听，下一请求无需等旧Promise；旧结果不能回调后继请求
+LocationClient.ets[IH8S]: F:校验定位条件与权限服务，读取合格缓存或独占LocationKit监听并结算请求 | R:- | A:LocationClient.currentLocation,LocationRequest.cancel,LocationOptions | S:每请求独立timer/listener，取消幂等且不影响其他请求；仅缓存成功读数到内存，无历史位置错误3301200继续监听，deadline重查权限和服务
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/ohos/location-native/src/main/===
+module.json5[FV4T]: F:声明LocationNative HAR模块及default/tablet设备类型 | R:- | A:LocationNative | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/ohos/tests/===
+location.test.cjs[TH6S]: F:转译生产ArkTS并用受控LocationKit验证缓存、超时、取消和读数过滤 | R:code:ohos/location-native/src/main/ets/LocationClient.ets | A:Node检查入口 | S:系统权限和位置SDK为替身，不证明真实设备GPS或系统投递
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/scripts/===
+build.sh[OV7T]: F:按显式operation/platform调用组件最小编译与Maven/HAR打包入口 | R:code:scripts/package-maven.sh,code:scripts/ci-build-kuikly-render.sh | A:compile|package --platform | S:Harmony compile继续构建真实HAR；依赖已准备标志只控制ohpm install，实际构建仍需执行
+check-maven.py[XQ7M]: F:校验本地Maven元数据、精确变体引用、字节摘要、sidecar与许可 | R:- | A:repository,group,version,modules_csv,native_targets_csv | S:解析snapshot实物及available-at同名变体，可限制JVM字节码major；实际文件必须存在且匹配声明
+check-public-maven.py[XQ7L]: F:只读审计不可变JitPack标签身份和公开publication实物、变体及sidecar | R:- | A:--repo,--version,--commit,--expected-publications | S:要求ok公开Tag及完整SHA，明确记录渠道sidecar限制；不以构建消费者替代逐字节制品核对
+ci-build-kuikly-render.sh[OV6S]: F:构建固定Renderer和可选本地或不可变远程Module Pod供Simulator检查 | R:code:GycLocationKuikly.podspec | A:绝对构建目录,可选Pod和远程Tag | S:Pod参数严格校验，远程来源必须提供仓库与Tag，宿主所选SDK另验消费
+ci-java.security[FV3T]: F:配置CI正向DNS缓存一小时并禁用负缓存 | R:- | A:- | S:-
+ci-release.sh[OV7T]: F:从真实远端Tag取身份后复验同版归档与公开Maven发布清单 | R:code:jitpack-install.sh,code:scripts/check-maven.py,code:scripts/check-public-maven.py | A:VERSION | S:使用远端不可变Tag而非PR HEAD；历史0.1.0至0.1.5保留旧publication清单
+ci-repositories.gradle[FV6T]: F:配置CI编译缓存、强制执行行为测试及受控Maven仓库解析 | R:- | A:GYC_CI_BUILD_CACHE | S:DNS预热失败继续交由实际解析裁决；只限定Eazytec厂商版本并移除CI中不稳定Aliyun镜像
+jitpack-metadata.py[XV7T]: F:原子预校验并移除JitPack不能保留的sources/metadata及空资源变体 | R:- | A:normalize,staging路径 | S:非空资源禁止裁剪，必须修复发布；先校验全体再写入，避免半改仓库
+package-maven.sh[OV6T]: F:发布当前版本到全新staging并规范元数据、生成归档及SHA256 | R:code:scripts/jitpack-metadata.py,code:release-pack.py | A:VERSION和额外Gradle参数 | S:已有staging或归档直接拒绝，避免混入旧候选
+test-check-maven.py[TQ5T]: F:运行真实Maven checker验证完整与故意损坏的staging | R:code:scripts/check-maven.py | A:CheckerTest | S:-
+test-jitpack-metadata.py[TQ5T]: F:用实际metadata与ZIP检验资源裁剪、引用和失败原子性 | R:code:scripts/jitpack-metadata.py | A:PublicationContracts | S:-
+verify-kuikly-assembly.sh[XQ6T]: F:从库内staging导出consumer framework并用真实Pod类型检查Swift装配 | R:code:verification-consumer/NativeModuleAssembly.swift | A:真实Simulator Products目录 | S:验证本地候选装配，不证明远程Maven或Git Pod消费
+verify-kuikly-module.sh[XQ7M]: F:安装并运行真实Simulator receiver生命周期fixture并收集有界诊断 | R:code:iosApp/KuiklyTests/ModuleLifecycleCheck.swift | A:真实Simulator Pod Products目录 | S:清除旧结果，要求本次PASS和COMPLETE且无FAIL；90秒deadline下simctl返回0不能代替App完成
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/tests/===
+kuikly-module.cjs[TH6T]: F:运行转译生产HAR receiver并验证参数传递、取消归属与销毁 | R:code:ohos/location-native/src/main/ets/GycLocationModule.ets | A:Node桥接检查入口 | S:LocationClient与SDK为替身；同栈cancel后立即新请求，旧Promise不能交付后继
+test_jitpack_install.py[TQ6T]: F:执行真实安装器校验段覆盖来源、摘要及归档路径安全失败 | R:code:jitpack-install.sh | A:JitPackInstallTest | S:完全离线，不运行SDK；验证失败须发生在实物解包之前
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-consumer/===
+NativeModuleAssembly.swift[TQ6T]: F:用导出的真实consumer类型为Swift receiver装配handler方法引用 | R:code:iosApp/Sources/GycLocationKuikly/GycLocationModule.swift,code:location-kuikly/src/iosMain/kotlin/io/github/gycrosskit/location/kuikly/IosLocationModuleHandler.kt | A:configureLocationModule | S:依赖真实framework头文件，不自行实现transport
+build.gradle.kts[FV6T]: F:建立独立多平台Maven消费者并为Simulator导出定位framework | R:code:verification-consumer/settings.gradle.kts | A:locationVersion,kuiklyRenderFrameworkDir | S:0.1.0至0.1.5禁用当时不存在的Android/iOS Native接线；较新版本导出Kuikly且链接真实Renderer
+gradle.properties[FV3T]: F:配置独立消费者Gradle堆与AndroidX | R:- | A:- | S:-
+settings.gradle.kts[FV5T]: F:限定定位坐标仓库并允许显式本地staging或默认JitPack消费 | R:code:verification-consumer/build.gradle.kts | A:locationRepository | S:本地staging与公网消费需分别留证
+候选验收.md[SQ3M]: F:保存0.1.1候选、远程Maven和Release HAR精确消费历史证据 | R:- | A:- | S:当时Registry安装NOTFOUND，审核受理不等于可安装
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-consumer/src/androidMain/kotlin/===
+AndroidProbe.kt[TH4T]: F:编译验证Android定位client构造入口 | R:code:location-core/src/androidMain/kotlin/io/github/gycrosskit/location/AndroidLocationClient.kt | A:create(Context) | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-consumer/src/commonMain/kotlin/===
+Probe.kt[TH4T]: F:编译验证公共定位接口和100米精度参数 | R:code:location-core/src/commonMain/kotlin/io/github/gycrosskit/location/Location.kt | A:probe(LocationClient) | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-consumer/src/iosMain/kotlin/===
+IosProbe.kt[TH4T]: F:编译验证iOS定位client构造入口 | R:code:location-core/src/iosMain/kotlin/io/github/gycrosskit/location/IosLocationClient.kt | A:create() | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-consumer/src/kuiklyNativeAndroidMain/kotlin/===
+NativeModuleProbe.kt[TH4T]: F:编译验证Android真实Renderer定位注册扩展 | R:code:location-kuikly/src/androidMain/kotlin/io/github/gycrosskit/location/kuikly/AndroidLocationModule.kt | A:registerKuiklyLocation | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-consumer/src/kuiklyNativeIosMain/kotlin/===
+NativeModuleProbe.kt[TH4T]: F:编译验证iOS原生桥handler导出 | R:code:location-kuikly/src/iosMain/kotlin/io/github/gycrosskit/location/kuikly/IosLocationModuleHandler.kt | A:iosKuiklyLocationHandler | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-consumer/src/ohosArm64Main/kotlin/===
+OhosProbe.kt[TH4T]: F:编译验证OHOS Kuikly定位调用和页面销毁接口 | R:code:location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModule.kt | A:createOhos,locate,destroy | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-kuikly/===
+build.gradle.kts[FV5T]: F:在独立JVM工程直接编译生产core和Module进行行为回归 | R:code:verification-kuikly/src/test/kotlin/KuiklyTransport.kt | A:test | S:传输/JSON为替身，生产协程与状态逻辑真实执行，JVM17
+settings.gradle.kts[FV3T]: F:配置独立Kuikly生命周期回归的插件和依赖仓库 | R:- | A:- | S:-
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification-kuikly/src/test/kotlin/===
+KuiklyJson.kt[TQ4T]: F:以org.json实现测试所需的Kuikly JSON最小接口 | R:- | A:JSONObject,JSONArray | S:仅用于独立测试，不证明SDK序列化行为
+KuiklyTransport.kt[TQ4T]: F:截获Module原生调用、取消与callback移除供真实生产逻辑测试 | R:- | A:Module,CallbackRef,NativeResult | S:替代SDK传输，不替代生产超时和协程逻辑
+LocationModuleDeadlineTest.kt[TH6T]: F:验证调用侧串行取消、非法回执、期限余量、空响应和销毁迟交付 | R:code:location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModule.kt | A:LocationModuleDeadlineTest | S:虚拟时钟运行生产Module；30秒请求不能被12秒bridge截断
+LocationModuleHandlerTest.kt[TH6T]: F:验证生产handler请求ID取消、独立owner、输入与缓存开关合同 | R:code:location-kuikly/src/commonMain/kotlin/io/github/gycrosskit/location/kuikly/LocationModuleHandler.kt | A:LocationModuleHandlerTest | S:受控client不调用真实GPS，旧请求的cancel与终态只作用于对应ID
+
+===/Users/guoyang/.codex/worktrees/aoci-location/location/verification/ci/===
+test_cache_contract.py[TQ3T]: F:静态检查编译缓存开关与行为测试禁缓存规则存在 | R:code:scripts/ci-repositories.gradle | A:Python断言入口 | S:文本合同检查不证明实际任务执行
+test_module_check.py[TQ6S]: F:以SDK命令替身执行真实shell门禁覆盖延迟完成、失败和诊断收集 | R:code:scripts/verify-kuikly-module.sh | A:Python检查入口 | S:测试缩短deadline且隔离HOME；不证明Swift编译或真实Simulator生命周期
